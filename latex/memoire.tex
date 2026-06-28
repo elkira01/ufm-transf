@@ -8,7 +8,7 @@
 \definecolor{red}{RGB}{255,0,0}
 \usepackage{booktabs}
 \usepackage{algorithm}
-\usepackage{algpseudocode}
+\usepackage{algorithmic}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
 \usepackage{cite}
@@ -29,6 +29,10 @@
 \usepackage{epigraph}
 \usepackage{colortbl}
 \usepackage{etoolbox}
+
+% Custom commands
+\newcommand{\TO}{\textbf{to}}
+\newcommand{\margin}{\ensuremath{m}}
 
 % Fix abstract package conflict with French babel
 \ifdef{\french}{\french}{}
@@ -474,7 +478,7 @@ Le \textbf{module d'encodage modalitaire} (\S\ref{sec:encodeurs}) extrait des re
 
 Le \textbf{module de projection} (\S\ref{sec:projecteurs}) aplait et projette les caract\'{e}ristiques sur une hypersph\`{e}re commune de dimension $d = 256$. Les projecteurs $\mathcal{P}_f : \mathbb{R}^{1408 \times 7 \times 7} \rightarrow \mathbb{S}^{255}$ et $\mathcal{P}_p : \mathbb{R}^{512 \times 7 \times 7} \rightarrow \mathbb{S}^{255}$ produisent respectivement $\mathbf{h}_f$ et $\mathbf{h}_p$, avec $\|\mathbf{h}_f\|_2 = \|\mathbf{h}_p\|_2 = 1$. Un token apprenable $\mathbf{t}_{\text{miss}} \in \mathbb{R}^{256}$ remplace la repr\'{e}sentation d'une modalit\'{e} absente.
 
-Le \textbf{module de fusion par attention crois\'{e}e} (\S\ref{sec:attention}) constitue le c\oe ur architectural. Un empilement de $L = 4$ couches de transformer \`{a} attention crois\'{e}e bidirectionnelle, chacune avec $H = 8$ t\^{e}tes et une dimension latente $d = 256$, produit un token fusionn\'{e} $\mathbf{c} \in \mathbb{R}^{256}$. Les scores de qualit\'{e} $q_f$ et $q_p$ modulent les logits d'attention avant le \emph{softmax}, garantissant que les modalit\'{e}s d\'{e}grad\'{e}es contribuent moins au r\'{e}sultat fusionn\'{e}.
+Le \textbf{module de fusion par attention crois\'{e}e} (\S\ref{sec:fusion-attention}) constitue le c\oe ur architectural. Un empilement de $L = 4$ couches de transformer \`{a} attention crois\'{e}e bidirectionnelle, chacune avec $H = 8$ t\^{e}tes et une dimension latente $d = 256$, produit un token fusionn\'{e} $\mathbf{c} \in \mathbb{R}^{256}$. Les scores de qualit\'{e} $q_f$ et $q_p$ modulent les logits d'attention avant le \emph{softmax}, garantissant que les modalit\'{e}s d\'{e}grad\'{e}es contribuent moins au r\'{e}sultat fusionn\'{e}.
 
 Le \textbf{module de d\'{e}cision} (\S\ref{sec:similarite}) comprend deux t\^{e}tes. La t\^{e}te de similarit\'{e} $\mathcal{S}$ calcule un score cosinus avec marge additive ArcFace \cite{deng2019arcface} de param\`{e}tres $m = 0{,}5$ et $s = 30$. La t\^{e}te d'incertitude $\mathcal{U}$ effectue $K = 5$ passes avant avec dropout actif \cite{gal2016dropout} pour produire une d\'{e}composition de l'incertitude en composantes al\'{e}atoire et \'{e}pist\'{e}mique, ainsi qu'un intervalle de confiance associ\'{e} \`{a} la d\'{e}cision.
 
@@ -573,7 +577,7 @@ Un encodage positionnel apprenable par modalit\'{e} est ajout\'{e} \`{a} chaque 
 L'entra\^{i}nement avec \emph{modality dropout} (ModDrop), introduit par Neverova \emph{et al.} \cite{neverova2016moddrop}, renforce la capacit\'{e} du syst\`{e}me \`{a} fonctionner avec des modalit\'{e}s incompl\`{e}tes. Avec une probabilit\'{e} $p_{\text{drop}} = 0{,}30$, chaque modalit\'{e} est al\'{e}atoirement masqu\'{e}e pendant l'entra\^{i}nement. Cette proc\'{e}dure force le transformer \`{a} apprendre des corr\'{e}lations cross-modales robustes tout en pr\'{e}servant la capacit\'{e} unimodale de d\'{e}gradation gracieuse.
 
 \section{Module de Fusion par Attention Crois\'{e}e Modul\'{e}e par la Qualit\'{e}}
-\label{sec:attention}
+\label{sec:fusion-attention}
 
 \subsection{Attention crois\'{e}e bidirectionnelle : requ\^{e}tes visage $\rightarrow$ cl\'{e}s/valeurs empreinte, et inversement}
 
@@ -1079,7 +1083,7 @@ Le Tableau~\ref{tab:resultats-principaux} pr\'{e}sente les performances de UFM-T
     \centering
     \caption{Comparaison des performances de v\'{e}rification biom\'{e}trique. TAR rapport\'{e} \`{a} deux seuils op\'{e}rationnels (FAR = 0.1\% et FAR = 1\%). Meilleurs r\'{e}sultats en gras.}
     \label{tab:resultats-principaux}
-    \begin{tabular}{lcccccc}
+    \begin{tabular}{lccccc}
         \hline
         \hline
         \textbf{M\'{e}thode} & \textbf{EER (\%)} & \textbf{TAR@0.1\%} & \textbf{TAR@1\%} & \textbf{AUC (\%)} & \textbf{Params (M)} \\
