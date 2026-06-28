@@ -173,6 +173,14 @@ def _unwrap_model(model: nn.Module) -> nn.Module:
     return model
 
 
+def save_history(history: List[Dict[str, Any]], path: Path) -> None:
+    """Atomically write training history to a JSON file."""
+    tmp = path.with_suffix(".tmp")
+    with open(tmp, "w") as f:
+        json.dump(history, f, indent=2)
+    tmp.replace(path)
+
+
 # ---------------------------------------------------------------------------
 # Hyperparameter configuration dataclass
 # ---------------------------------------------------------------------------
@@ -1654,6 +1662,9 @@ def train_phase1_unimodal(
         }
         history.append(metrics)
 
+        if config.save_logs and _is_main_process():
+            save_history(history, output_dir / "history.json")
+
         logger.info(
             f"Phase1 Epoch {epoch:3d}/{config.epochs_phase1} | "
             f"Train Loss: {metrics['train_loss']:.4f} | "
@@ -1704,16 +1715,13 @@ def train_phase1_unimodal(
                 phase=1,
             )
             if config.save_logs:
-                with open(output_dir / "history_phase1.json", "w") as f:
-                    json.dump(history, f, indent=2)
+                save_history(history, output_dir / "history.json")
             logger.info(f"Phase 1 stopped early at epoch {epoch}/{config.epochs_phase1} "
                         f"(graceful shutdown). Best val EER: {best_val_eer:.4f}")
             return model
 
-    # Save training history
     if config.save_logs:
-        with open(output_dir / "history_phase1.json", "w") as f:
-            json.dump(history, f, indent=2)
+        save_history(history, output_dir / "history.json")
 
     logger.info(f"Phase 1 complete. Best val EER: {best_val_eer:.4f}")
     return model
@@ -1794,7 +1802,8 @@ def train_phase2_joint(
     ).to(device)
 
     best_val_eer = float("inf")
-    history: List[Dict[str, Any]] = []
+    history_path = output_dir / "history.json"
+    history: List[Dict[str, Any]] = json.loads(history_path.read_text()) if history_path.exists() else []
     start_epoch = max(1, int(start_epoch))
     logger.info("Phase 2 starts at epoch %d", start_epoch)
 
@@ -1827,6 +1836,9 @@ def train_phase2_joint(
             "epoch_time": epoch_time,
         }
         history.append(metrics)
+
+        if config.save_logs and _is_main_process():
+            save_history(history, history_path)
 
         logger.info(
             f"Phase2 Epoch {epoch:3d}/{config.epochs_phase2} | "
@@ -1881,16 +1893,13 @@ def train_phase2_joint(
                 phase=2,
             )
             if config.save_logs:
-                with open(output_dir / "history_phase2.json", "w") as f:
-                    json.dump(history, f, indent=2)
+                save_history(history, history_path)
             logger.info(f"Phase 2 stopped early at epoch {epoch}/{config.epochs_phase2} "
                         f"(graceful shutdown). Best val EER: {best_val_eer:.4f}")
             return model
 
-    # Save training history
     if config.save_logs:
-        with open(output_dir / "history_phase2.json", "w") as f:
-            json.dump(history, f, indent=2)
+        save_history(history, history_path)
 
     logger.info(f"Phase 2 complete. Best val EER: {best_val_eer:.4f}")
     return model
@@ -2103,6 +2112,9 @@ def train_phase1_unimodal_separate(
         }
         history.append(metrics)
 
+        if config.save_logs and _is_main_process():
+            save_history(history, output_dir / "history.json")
+
         logger.info(
             f"Phase1-Sep Epoch {epoch:3d}/{config.epochs_phase1} | "
             f"Train Loss: {metrics['train_loss']:.4f} | "
@@ -2150,15 +2162,13 @@ def train_phase1_unimodal_separate(
                 phase=1,
             )
             if config.save_logs:
-                with open(output_dir / "history_phase1.json", "w") as f:
-                    json.dump(history, f, indent=2)
+                save_history(history, output_dir / "history.json")
             logger.info(f"Phase 1 (separate) stopped early at epoch {epoch}/{config.epochs_phase1} "
                         f"(graceful shutdown). Best train loss: {best_val_eer:.4f}")
             return model
 
     if config.save_logs:
-        with open(output_dir / "history_phase1.json", "w") as f:
-            json.dump(history, f, indent=2)
+        save_history(history, output_dir / "history.json")
 
     logger.info(f"Phase 1 (separate) complete. Best train loss: {best_val_eer:.4f}")
     return model
@@ -2249,7 +2259,8 @@ def train_phase2_joint_separate(
     ).to(device)
 
     best_val_eer = float("inf")
-    history: List[Dict[str, Any]] = []
+    history_path = output_dir / "history.json"
+    history: List[Dict[str, Any]] = json.loads(history_path.read_text()) if history_path.exists() else []
     start_epoch = max(1, int(start_epoch))
     logger.info("Phase 2 separate starts at epoch %d", start_epoch)
 
@@ -2368,6 +2379,9 @@ def train_phase2_joint_separate(
 
         history.append(metrics)
 
+        if config.save_logs and _is_main_process():
+            save_history(history, history_path)
+
         logger.info(
             f"Phase2-Sep Epoch {epoch:3d}/{config.epochs_phase2} | "
             f"Train Loss: {metrics['train_loss']:.4f} | "
@@ -2415,15 +2429,13 @@ def train_phase2_joint_separate(
                 phase=2,
             )
             if config.save_logs:
-                with open(output_dir / "history_phase2.json", "w") as f:
-                    json.dump(history, f, indent=2)
+                save_history(history, history_path)
             logger.info(f"Phase 2 (separate) stopped early at epoch {epoch}/{config.epochs_phase2} "
                         f"(graceful shutdown). Best train loss: {best_val_eer:.4f}")
             return model
 
     if config.save_logs:
-        with open(output_dir / "history_phase2.json", "w") as f:
-            json.dump(history, f, indent=2)
+        save_history(history, history_path)
 
     logger.info(f"Phase 2 (separate) complete. Best train loss: {best_val_eer:.4f}")
     return model
@@ -2638,6 +2650,13 @@ def main(config: Optional[TrainConfig] = None) -> nn.Module:
     # Output directory
     output_dir = Path(config.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Initialize unified history file (rank 0 only)
+    if config.save_logs and _is_main_process():
+        history_path = output_dir / "history.json"
+        if not history_path.exists():
+            history_path.write_text("[]")
+            logger.info("Initialized history.json")
 
     # Save configuration (rank 0 only)
     if _is_main_process():
