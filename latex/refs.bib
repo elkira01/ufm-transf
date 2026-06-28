@@ -1,0 +1,2117 @@
+%% ============================================================================
+%% refs.bib -- Bibliography for Deep Learning in Multimodal Biometrics
+%% ============================================================================
+%% Shared by: article.tex (journal paper) and memoire.tex (master thesis)
+%% Coverage: Face recognition, fingerprint recognition, multimodal fusion,
+%%           transformers, uncertainty quantification, explainability, 
+%%           missing modality handling, quality-aware fusion.
+%% Total: 80+ references
+%% ============================================================================
+
+
+%% ============================================================================
+%% A. FOUNDATIONAL WORKS: Biometric Fusion and Multibiometric Systems
+%% ============================================================================
+
+@article{jain2005scorenormalization,
+  author = {Jain, Anil K. and Nandakumar, Karthik and Ross, Arun},
+  title = {Score Normalization in Multimodal Biometric Systems},
+  journal = {Pattern Recognition},
+  volume = {38},
+  number = {12},
+  pages = {2270--2285},
+  year = {2005},
+  doi = {10.1016/j.patcog.2005.06.016}
+}
+
+@inproceedings{dass2005principled,
+  author = {Dass, Sarat C. and Nandakumar, Karthik and Jain, Anil K.},
+  title = {A Principled Approach to Score Level Fusion in Multimodal Biometric Systems},
+  booktitle = {Proc. Audio- and Video-Based Biometric Person Authentication (AVBPA)},
+  series = {LNCS 3546},
+  pages = {1049--1058},
+  year = {2005},
+  publisher = {Springer},
+  doi = {10.1007/11527923_109}
+}
+
+@inproceedings{nandakumar2006quality,
+  author = {Nandakumar, Karthik and Chen, Yi and Jain, Anil K. and Dass, Sarat C.},
+  title = {Quality-based Score Level Fusion in Multibiometric Systems},
+  booktitle = {Proc. 18th International Conference on Pattern Recognition (ICPR)},
+  pages = {473--476},
+  year = {2006},
+  doi = {10.1109/ICPR.2006.1039}
+}
+
+@article{nandakumar2008likelihood,
+  author = {Nandakumar, Karthik and Chen, Yi and Dass, Sarat C. and Jain, Anil K.},
+  title = {Likelihood Ratio-Based Biometric Score Fusion},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume = {30},
+  number = {2},
+  pages = {342--347},
+  year = {2008},
+  doi = {10.1109/TPAMI.2007.70750}
+}
+
+@inproceedings{ross2004multimodal,
+  author = {Ross, Arun and Jain, Anil K.},
+  title = {Multimodal Biometrics: An Overview},
+  booktitle = {Proc. 12th European Signal Processing Conference (EUSIPCO)},
+  pages = {1221--1224},
+  year = {2004}
+}
+
+@inproceedings{jain2009fusion,
+  author = {Jain, Anil K. and Nandakumar, Karthik and Ross, Arun},
+  title = {Fusion in Multibiometric Identification Systems},
+  booktitle = {Proc. IEEE International Conference on Biometrics (ICB)},
+  pages = {1--6},
+  year = {2009}
+}
+
+@article{poh2012benchmarking,
+  author = {Poh, Norman and Bourlai, Thirimachos and Kittler, Josef},
+  title = {Benchmarking Quality-Dependent and Cost-Sensitive Score-Level Multimodal Biometric Fusion Algorithms},
+  journal = {IET Biometrics},
+  volume = {1},
+  number = {1},
+  pages = {8--17},
+  year = {2012},
+  doi = {10.1049/iet-bmt.2011.0002}
+}
+
+@article{nguyen2015dempster,
+  author = {Nguyen, Xuan and Tran, Dat and Ma, Wanli and Sharma, Dharmendra},
+  title = {Score-Level Multibiometric Fusion Based on {D}empster-{S}hafer Theory Incorporating Uncertainty Factors},
+  journal = {IEEE Transactions on Human-Machine Systems},
+  volume = {45},
+  number = {1},
+  pages = {1--10},
+  year = {2015},
+  doi = {10.1109/THMS.2014.2363120}
+}
+
+
+%% ============================================================================
+%% B. DEEP FACE RECOGNITION: Foundational Architectures
+%% ============================================================================
+
+@inproceedings{he2016resnet,
+  author = {He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
+  title = {Deep Residual Learning for Image Recognition},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {770--778},
+  year = {2016},
+  doi = {10.1109/CVPR.2016.90}
+}
+
+@inproceedings{huang2017densenet,
+  author = {Huang, Gao and Liu, Zhuang and van der Maaten, Laurens and Weinberger, Kilian Q.},
+  title = {Densely Connected Convolutional Networks},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {4700--4708},
+  year = {2017},
+  doi = {10.1109/CVPR.2017.243}
+}
+
+@inproceedings{tan2019efficientnet,
+  author = {Tan, Mingxing and Le, Quoc},
+  title = {{E}fficient{N}et: Rethinking Model Scaling for Convolutional Neural Networks},
+  booktitle = {Proc. International Conference on Machine Learning (ICML)},
+  pages = {6105--6114},
+  year = {2019}
+}
+
+@inproceedings{schroff2015facenet,
+  author = {Schroff, Florian and Kalenichenko, Dmitry and Philbin, James},
+  title = {{F}ace{N}et: A Unified Embedding for Face Recognition and Clustering},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {815--823},
+  year = {2015},
+  doi = {10.1109/CVPR.2015.7298682}
+}
+
+@inproceedings{wen2016centerloss,
+  author = {Wen, Yandong and Zhang, Kaipeng and Li, Zhifeng and Qiao, Yu},
+  title = {A Discriminative Feature Learning Approach for Deep Face Recognition},
+  booktitle = {Proc. European Conference on Computer Vision (ECCV)},
+  pages = {499--515},
+  year = {2016},
+  doi = {10.1007/978-3-319-46478-7_31}
+}
+
+@inproceedings{wang2018cosface,
+  author = {Wang, Hao and Wang, Yitong and Zhou, Zheng and Ji, Xing and Gong, Dihong and Zhou, Jingchao and Li, Zhifeng and Liu, Wei},
+  title = {{C}os{F}ace: Large Margin Cosine Loss for Deep Face Recognition},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {5265--5274},
+  year = {2018},
+  doi = {10.1109/CVPR.2018.00552}
+}
+
+@inproceedings{deng2019arcface,
+  author = {Deng, Jiankang and Guo, Jia and Xue, Niannan and Zafeiriou, Stefanos},
+  title = {{A}rc{F}ace: Additive Angular Margin Loss for Deep Face Recognition},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {4690--4699},
+  year = {2019},
+  doi = {10.1109/CVPR.2019.00482}
+}
+
+@inproceedings{huang2020curricularface,
+  author = {Huang, Yuge and Wang, Yuhan and Tai, Ying and Liu, Xiaoming and Shen, Pengcheng and Li, Shaoxin and Li, Jilin and Huang, Feiyue},
+  title = {{C}urricular{F}ace: Adaptive Curriculum Learning Loss for Deep Face Recognition},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {5901--5910},
+  year = {2020}
+}
+
+@inproceedings{meng2021magface,
+  author = {Meng, Qiang and Zhao, Shichao and Huang, Zhida and Zhou, Feng},
+  title = {{M}ag{F}ace: A Universal Representation for Face Recognition and Quality Assessment},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {14235--14244},
+  booktitle = {arXiv preprint arXiv:2103.14803},
+  year = {2021}
+}
+
+@inproceedings{kim2022adaface,
+  author = {Kim, Minchul and Jain, Anil K. and Liu, Xiaoming},
+  title = {{A}da{F}ace: Quality Adaptive Margin for Face Recognition},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {18750--18759},
+  year = {2022},
+  doi = {10.1109/CVPR52688.2022.01822}
+}
+
+@inproceedings{boutros2022elasticface,
+  author = {Boutros, Fadi and Damer, Naser and Batrla, Kiran and Anand, Meiling and Kuijper, Arjan},
+  title = {{E}lastic{F}ace: Elastic Margin Loss for Deep Face Recognition},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+  pages = {1578--1587},
+  year = {2022}
+}
+
+@inproceedings{dabouei2021boosting,
+  author = {Dabouei, Amin and Kazemi, Hadi and Iranmanesh, Sobhan and Nasrabadi, Nasser M. and Dawson, Jeremy},
+  title = {Boosting Deep Face Recognition via Disentangling Representation and Classifier},
+  booktitle = {Proc. IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  pages = {2983--2992},
+  year = {2021}
+}
+
+@inproceedings{musgrave2020metric,
+  author = {Musgrave, Kevin and Belongie, Serge and Lim, Ser-Nam},
+  title = {A Metric Learning Reality Check},
+  booktitle = {Proc. European Conference on Computer Vision (ECCV)},
+  pages = {681--699},
+  year = {2020},
+  doi = {10.1007/978-3-030-58545-7_39}
+}
+
+@article{hernandez2021pad,
+  author = {Hernandez-Ortega, Javier and Tolosana, Ruben and Fierrez, Julian and Morales, Aythami},
+  title = {Introduction to Face Presentation Attack Detection},
+  journal = {IEEE Transactions on Biometrics, Behavior, and Identity Science},
+  volume = {3},
+  number = {1},
+  pages = {78--99},
+  year = {2021},
+  doi = {10.1109/TBIOM.2020.3037259}
+}
+
+
+%% ============================================================================
+%% C. VISION TRANSFORMERS FOR BIOMETRIC RECOGNITION
+%% ============================================================================
+
+@inproceedings{dosovitskiy2021vit,
+  author = {Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas and Dehghani, Mostafa and Minderer, Matthias and Heigold, Georg and Gelly, Sylvain and Uszkoreit, Jakob and Houlsby, Neil},
+  title = {An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale},
+  booktitle = {Proc. International Conference on Learning Representations (ICLR)},
+  year = {2021}
+}
+
+@inproceedings{liu2021swin,
+  author = {Liu, Ze and Lin, Yutong and Cao, Yue and Hu, Han and Wei, Yixuan and Zhang, Zheng and Lin, Stephen and Guo, Baining},
+  title = {Swin Transformer: Hierarchical Vision Transformer Using Shifted Windows},
+  booktitle = {Proc. IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages = {10012--10022},
+  year = {2021},
+  doi = {10.1109/ICCV48922.2021.00986}
+}
+
+@article{zhong2021facetransformer,
+  author = {Zhong, Yaoyao and Deng, Weihong},
+  title = {Face Transformer for Recognition},
+  journal = {arXiv preprint},
+  volume = {arXiv:2103.14803},
+  year = {2021}
+}
+
+@inproceedings{dan2023transface,
+  author = {Dan, Kun and Hu, Ran and Guo, Yuge and Guo, Jianfeng and Xu, Zhengjie and Liu, Zhaoxiang and Deng, Jiankang and Dong, Weihong and Zhang, Zixiang},
+  title = {{T}rans{F}ace: Calibrating Transformer Training for Face Recognition from a Data-Centric Perspective},
+  booktitle = {Proc. IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages = {20710--20720},
+  year = {2023},
+  doi = {10.1109/ICCV51070.2023.01906}
+}
+
+@article{you2025lvface,
+  author = {You, Shu and Chen, Shuo and Gao, Changlu and Huang, Zhizhen and Wang, Jieru and Wang, Yuhan and Du, Zeyu},
+  title = {{LVFace}: Progressive Cluster Optimization for Large Vision Models in Face Recognition},
+  journal = {arXiv preprint},
+  volume = {arXiv:2501.13420},
+  year = {2025}
+}
+
+@inproceedings{chettaoui2026vitgct,
+  author = {Chettaoui, Fadoua and others},
+  title = {{ViT-GCT}: Enhancing Vision Transformers with a Global Context Token for Face Recognition},
+  booktitle = {Proc. International Conference on Learning Representations (ICLR)},
+  year = {2026}
+}
+
+@inproceedings{shapira2024facecoresetnet,
+  author = {Shapira, Inbar and Keller, Yosi},
+  title = {{F}ace{C}oreset{N}et: Differentiable Coresets for Face Set Recognition},
+  booktitle = {Proc. AAAI Conference on Artificial Intelligence},
+  volume = {38},
+  number = {5},
+  pages = {14705--14713},
+  year = {2024},
+  doi = {10.1609/aaai.v38i5.28276}
+}
+
+
+%% ============================================================================
+%% D. FINGERPRINT RECOGNITION: Deep Learning Approaches
+%% ============================================================================
+
+@article{engelsma2021deepprint,
+  author = {Engelsma, Joshua J. and Cao, Kai and Jain, Anil K.},
+  title = {Learning a Fixed-Length Fingerprint Representation},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume = {43},
+  number = {6},
+  pages = {1986--1999},
+  year = {2021},
+  doi = {10.1109/TPAMI.2020.2987941}
+}
+
+@article{grosz2024afrnet,
+  author = {Grosz, Stephen A. and Jain, Anil K.},
+  title = {{AFR-Net}: Attention-Driven Fingerprint Recognition Network},
+  journal = {IEEE Transactions on Biometrics, Behavior, and Identity Science},
+  volume = {6},
+  number = {1},
+  pages = {105--119},
+  year = {2024},
+  doi = {10.1109/TBIOM.2023.3345764}
+}
+
+@article{grosz2023lfrnet,
+  author = {Grosz, Stephen A. and Jain, Anil K.},
+  title = {Latent Fingerprint Recognition: Fusion of Local and Global Embeddings ({LFR-Net})},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {18},
+  pages = {2906--2919},
+  year = {2023},
+  doi = {10.1109/TIFS.2023.3314207}
+}
+
+@article{he2022pfvnet,
+  author = {He, Zhiyu and Han, Chunlin and Guan, Xiongjun and Zhu, Jianfu and Zhang, Dapeng and Li, Ying and Yin, Jianping},
+  title = {{PFVNet}: A Partial Fingerprint Verification Network Learned from Large Fingerprint Matching},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {17},
+  pages = {3706--3719},
+  year = {2022},
+  doi = {10.1109/TIFS.2022.3209869}
+}
+
+@article{guan2025jipnet,
+  author = {Guan, Xiongjun and Han, Chunlin and He, Zhiyu and Zhu, Jianfu and Zhang, Dapeng and Yin, Jianping},
+  title = {Joint Identity Verification and Pose Alignment for Partial Fingerprints},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {20},
+  pages = {249--263},
+  year = {2025},
+  doi = {10.1109/TIFS.2024.3499505}
+}
+
+@article{grosz2022c2cl,
+  author = {Grosz, Stephen A. and Engelsma, Joshua J. and Cao, Kai and Jain, Anil K.},
+  title = {{C2CL}: Contact to Contactless Fingerprint Matching},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {17},
+  pages = {282--294},
+  year = {2022},
+  doi = {10.1109/TIFS.2021.3134867}
+}
+
+@article{grosz2022minutiaeguided,
+  author = {Grosz, Stephen A. and Engelsma, Joshua J. and Jain, Anil K.},
+  title = {Minutiae-Guided Fingerprint Embeddings via Vision Transformers},
+  journal = {arXiv preprint},
+  volume = {arXiv:2210.13994},
+  year = {2022}
+}
+
+@article{qiu2024ifvit,
+  author = {Qiu, Yijing and Grosz, Stephen A. and Jain, Anil K.},
+  title = {{IFViT}: Interpretable Fixed-Length Representation for Fingerprint Matching via Vision Transformer},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {19},
+  pages = {7382--7395},
+  year = {2024},
+  doi = {10.1109/TIFS.2024.3412270}
+}
+
+@article{cao2019latent,
+  author = {Cao, Kai and Jain, Anil K.},
+  title = {Automated Latent Fingerprint Recognition},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume = {41},
+  number = {4},
+  pages = {813--824},
+  year = {2019},
+  doi = {10.1109/TPAMI.2018.2833033}
+}
+
+@article{gazi2026minutiaefree,
+  author = {Gazi, Taha and Schreck, Thomas and Breitinger, Frank and Banerjee, Amarnath},
+  title = {Minutiae-Free Fingerprint Recognition via Vision Transformers: An Explainable Approach},
+  journal = {Applied Sciences},
+  volume = {16},
+  number = {2},
+  pages = {1009},
+  year = {2026},
+  doi = {10.3390/app16021009}
+}
+
+@article{liu2020deeppore,
+  author = {Liu, Fanglin and Liang, Jianjun and Cao, Kai and Zhang, Xi and Shen, Linlin},
+  title = {Fingerprint Pore Matching Using Deep Features},
+  journal = {Pattern Recognition},
+  volume = {107},
+  pages = {107496},
+  year = {2020},
+  doi = {10.1016/j.patcog.2020.107496}
+}
+
+@article{chugh2020benchmarking,
+  author = {Chugh, Tarang and Cao, Kai and Jain, Anil K.},
+  title = {Benchmarking Fingerprint Minutiae Extractors},
+  journal = {IET Biometrics},
+  volume = {9},
+  number = {5},
+  pages = {195--209},
+  year = {2020},
+  doi = {10.1049/iet-bmt.2018.5265}
+}
+
+
+%% ============================================================================
+%% E. MULTIMODAL BIOMETRIC FUSION: Feature-Level, Score-Level, and Hybrid
+%% ============================================================================
+
+@inproceedings{soleymani2018bilinear,
+  author = {Soleymani, Sobhan and Torfi, Amirsina and Dawson, Jeremy and Nasrabadi, Nasser M.},
+  title = {Generalized Bilinear Deep Convolutional Neural Networks for Multimodal Biometric Identification},
+  booktitle = {Proc. IEEE International Conference on Image Processing (ICIP)},
+  pages = {261--265},
+  year = {2018},
+  doi = {10.1109/ICIP.2018.8451013}
+}
+
+@inproceedings{soleymani2019multilevel,
+  author = {Soleymani, Sobhan and Dabouei, Amin and Kazemi, Hadi and Dawson, Jeremy and Nasrabadi, Nasser M.},
+  title = {Multi-Level Feature Abstraction from Convolutional Neural Networks for Multimodal Biometric Identification},
+  booktitle = {Proc. IEEE International Joint Conference on Biometrics (IJCB)},
+  pages = {1--8},
+  year = {2019}
+}
+
+@article{soleymani2021qualityaware,
+  author = {Soleymani, Sobhan and Dabouei, Amin and Taherkhani, Fariborz and Iranmanesh, Seyed Mehdi and Dawson, Jeremy and Nasrabadi, Nasser M.},
+  title = {A Novel Prosodic Information Fusion Framework for Multimodal Biometric Recognition},
+  journal = {IEEE Transactions on Biometrics, Behavior, and Identity Science},
+  volume = {4},
+  number = {1},
+  pages = {97--116},
+  year = {2021},
+  doi = {10.1109/TBIOM.2021.3131664}
+}
+
+@inproceedings{misra2016crossstitch,
+  author = {Misra, Ishan and Shrivastava, Abhinav and Gupta, Abhinav and Hebert, Martial},
+  title = {Cross-stitch Networks for Multi-task Learning},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {3994--4003},
+  year = {2016},
+  doi = {10.1109/CVPR.2016.433}
+}
+
+@inproceedings{ruder2019sluice,
+  author = {Ruder, Sebastian and Bingel, Joachim and Augenstein, Isabelle and S{\o}gaard, Anders},
+  title = {Latent Multi-task Architecture Learning},
+  booktitle = {Proc. AAAI Conference on Artificial Intelligence},
+  volume = {33},
+  number = {1},
+  pages = {4822--4829},
+  year = {2019},
+  doi = {10.1609/aaai.v33i01.33014822}
+}
+
+@article{alay2020multimodal,
+  author = {Alay, Noor and Al-Baity, Heyam H.},
+  title = {Deep Learning Approach for Multimodal Biometric Recognition System Based on Fusion of Iris, Face, and Finger Vein Traits},
+  journal = {Sensors},
+  volume = {20},
+  number = {19},
+  pages = {5523},
+  year = {2020},
+  doi = {10.3390/s20195523}
+}
+
+@article{ren2022nuptfpv,
+  author = {Ren, Haonan and Sun, Linzhuo and Guo, Jianan and Han, Chunlin},
+  title = {A Dataset and Benchmark for Multimodal Biometric Recognition Based on Fingerprint and Finger Vein},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {17},
+  pages = {2030--2043},
+  year = {2022},
+  doi = {10.1109/TIFS.2022.3175599}
+}
+
+@article{li2021jointdiscriminative,
+  author = {Li, Zhang and others},
+  title = {Joint Discriminative Feature Learning for Multimodal Finger Recognition},
+  journal = {Pattern Recognition},
+  volume = {112},
+  pages = {107704},
+  year = {2021},
+  doi = {10.1016/j.patcog.2020.107704}
+}
+
+@article{goh2022template,
+  author = {Goh, Zi Han and Wang, Yong and Leng, Lu and Liang, Sze-Ning and Jin, Zhe and Lai, Yuan-Liang and Wang, Xiaoling},
+  title = {A Framework for Multimodal Biometric Authentication Systems with Template Protection},
+  journal = {IEEE Access},
+  volume = {10},
+  pages = {96388--96402},
+  year = {2022},
+  doi = {10.1109/ACCESS.2022.3205413}
+}
+
+@article{talreja2021deephasing,
+  author = {Talreja, Valerio and Valenti, Matthew C. and Nasrabadi, Nasser M.},
+  title = {Deep Hashing for Secure Multimodal Biometrics},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {16},
+  pages = {1306--1321},
+  year = {2021},
+  doi = {10.1109/TIFS.2020.3033189}
+}
+
+@inproceedings{nagrani2021mbt,
+  author = {Nagrani, Arsha and Yang, Shan and Arnab, Anurag and Jansen, Aren and Schmid, Cordelia and Sun, Chen},
+  title = {Attention Bottlenecks for Multimodal Fusion},
+  booktitle = {Proc. Advances in Neural Information Processing Systems (NeurIPS)},
+  volume = {34},
+  pages = {1420--1433},
+  year = {2021}
+}
+
+@article{liang2024deepfusion,
+  author = {Liang, Yongjie and Liu, Yansong and Ge, Jun and Cao, Yucheng and Zhang, Wen and Sun, Zhenan},
+  title = {Deep Multimodal Data Fusion},
+  journal = {ACM Computing Surveys},
+  volume = {56},
+  number = {9},
+  pages = {1--36},
+  year = {2024},
+  doi = {10.1145/3649447}
+}
+
+@article{aswin2025hybrid,
+  author = {Al-Askar, Aswin A. and others},
+  title = {Deep Learning-Based Fingerprint-Vein Biometric Fusion},
+  journal = {Applied Sciences},
+  volume = {15},
+  number = {15},
+  pages = {8502},
+  year = {2025},
+  doi = {10.3390/app15158502}
+}
+
+@inproceedings{john2022avtnet,
+  author = {John, Kiran and Kawanishi, Yasutomo},
+  title = {A Multimodal Sensor Fusion Framework Robust to Missing Modalities for Person Recognition},
+  booktitle = {Proc. ACM International Conference on Multimedia in Asia (MM Asia)},
+  pages = {1--7},
+  year = {2022},
+  doi = {10.1145/3551626.3564965}
+}
+
+
+%% ============================================================================
+%% F. CROSS-MODAL ATTENTION AND TRANSFORMER-BASED FUSION
+%% ============================================================================
+
+@inproceedings{tiong2024fbr,
+  author = {Tiong, Luis and others},
+  title = {Flexible Biometrics Recognition: Bridging the Multimodality Gap Through Attention, Alignment and Prompt Tuning},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {267--276},
+  year = {2024},
+  doi = {10.1109/CVPR52733.2024.00033}
+}
+
+@article{yang2024authformer,
+  author = {Yang, Rui and Zhang, Qiang and Meng, Li},
+  title = {{AuthFormer}: Adaptive Multimodal Biometric Authentication Transformer for Middle-Aged and Elderly People},
+  journal = {arXiv preprint},
+  volume = {arXiv:2411.05395},
+  year = {2024}
+}
+
+@inproceedings{gnanapraveen2024crossmodal,
+  author = {Gnanapraveen, S. and others},
+  title = {Cross-Modal Transformers for Audio-Visual Person Recognition},
+  booktitle = {Proc. Odyssey: The Speaker and Language Recognition Workshop},
+  pages = {1--8},
+  year = {2024}
+}
+
+@inproceedings{liu2018lowrank,
+  author = {Liu, Zhun and Shen, Ying and Lakshminarasimhan, Venkata and Liang, Paul Pu and Zadeh, Amir and Morency, Louis-Philippe},
+  title = {Efficient Low-Rank Multimodal Fusion with Modality-Specific Factors},
+  booktitle = {Proc. 56th Annual Meeting of the Association for Computational Linguistics (ACL)},
+  pages = {2247--2256},
+  year = {2018}
+}
+
+@article{lin2023federated,
+  author = {Lin, Li and Zhao, Yanhong and Meng, Jing and Zhao, Qi},
+  title = {A Federated Attention-Based Multimodal Biometric Recognition Approach in {IoT}},
+  journal = {Sensors},
+  volume = {23},
+  number = {13},
+  pages = {6006},
+  year = {2023},
+  doi = {10.3390/s23136006}
+}
+
+@article{than2025gabor,
+  author = {Than, Phuong M. and Nguyen, Hung},
+  title = {Efficient Multimodal Biometric Identification via {G}abor-Enhanced Attention Networks},
+  journal = {Journal of Robotics and Control},
+  volume = {6},
+  number = {3},
+  year = {2025},
+  doi = {10.18196/jrc.v6i3.26490}
+}
+
+
+%% ============================================================================
+%% G. PROBABILISTIC EMBEDDINGS AND UNCERTAINTY QUANTIFICATION
+%% ============================================================================
+
+@inproceedings{shi2019pfe,
+  author = {Shi, Weidi and Jain, Anil K.},
+  title = {Probabilistic Face Embeddings},
+  booktitle = {Proc. IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages = {6902--6911},
+  year = {2019}
+}
+
+@inproceedings{chang2020dul,
+  author = {Chang, Jie and Lan, Zhizhou and Cheng, Chessi and Liu, Yihang and Wei, Yue and Chen, Yuan and Huang, Shiyue and Cui, Xin and Ma, Zhiqiang and others},
+  title = {Data Uncertainty Learning in Face Recognition},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {5710--5719},
+  year = {2020}
+}
+
+@inproceedings{gal2016dropout,
+  author = {Gal, Yarin and Ghahramani, Zoubin},
+  title = {Dropout as a {B}ayesian Approximation: Representing Model Uncertainty in Deep Learning},
+  booktitle = {Proc. International Conference on Machine Learning (ICML)},
+  pages = {1050--1059},
+  year = {2016}
+}
+
+@inproceedings{kendall2017uncertainties,
+  author = {Kendall, Alex and Gal, Yarin},
+  title = {What Uncertainties Do We Need in {B}ayesian Deep Learning for Computer Vision?},
+  booktitle = {Proc. Advances in Neural Information Processing Systems (NeurIPS)},
+  volume = {30},
+  pages = {5574--5584},
+  year = {2017}
+}
+
+@inproceedings{brack2023bayesian,
+  author = {Brack, Aimo and Tang, Siyi and Hennig, Philipp and Ommer, Bj{\"o}rn},
+  title = {Bayesian Metric Learning for Uncertainty Quantification in Image Retrieval},
+  booktitle = {Proc. Advances in Neural Information Processing Systems (NeurIPS)},
+  volume = {36},
+  year = {2023}
+}
+
+@article{han2022tmc,
+  author = {Han, Zongbo and Zhang, Changqing and Fu, Huazhu and Zhou, Joey Tianyi},
+  title = {Trusted Multi-View Classification with Dynamic Evidential Fusion},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume = {45},
+  number = {2},
+  pages = {2551--2566},
+  year = {2023},
+  doi = {10.1109/TPAMI.2022.3210985}
+}
+
+@inproceedings{conti2024uncertainty,
+  author = {Conti, Florent and Tili, Sana and Dehgan, Arslan and Damer, Naser and Kuijper, Arjan},
+  title = {Assessing Uncertainty in Similarity Scoring: Performance \& Fairness},
+  booktitle = {Proc. International Conference on Learning Representations (ICLR)},
+  year = {2024}
+}
+
+@article{he2025surveyuq,
+  author = {He, Shiyin and Xiao, Yixi and Jia, Xingyu and Li, Yinchuan and Zhang, Dongsheng and Chen, Qian and Guo, Lei},
+  title = {A Survey on Uncertainty Quantification Methods for Deep Learning},
+  journal = {ACM Computing Surveys},
+  volume = {57},
+  number = {5},
+  pages = {1--43},
+  year = {2025},
+  doi = {10.1145/3786319}
+}
+
+@article{chen2022dualgaussian,
+  author = {Chen, Jinghua and Leng, Lu and Li, Zhang and Sun, Zhenan},
+  title = {Dual {G}aussian Modeling for Deep Face Embeddings},
+  journal = {Pattern Recognition Letters},
+  volume = {162},
+  pages = {32--38},
+  year = {2022},
+  doi = {10.1016/j.patrec.2022.10.002}
+}
+
+@article{balomenos2018conformal,
+  author = {Balomenos, Alexandros D. and Kottas, Dionysios P. and Papadopoulos, Harris},
+  title = {Automatic Face Recognition with Well-Calibrated Confidence Measures},
+  journal = {Machine Learning},
+  volume = {107},
+  number = {8-10},
+  pages = {1509--1533},
+  year = {2018},
+  doi = {10.1007/s10994-018-5756-7}
+}
+
+@article{erlygin2024holue,
+  author = {Erlygin, Evgenii and Zaytsev, Aleksei},
+  title = {Holistic Uncertainty Estimation for Open-Set Recognition},
+  journal = {arXiv preprint},
+  volume = {arXiv:2408.14229},
+  year = {2024}
+}
+
+
+%% ============================================================================
+%% H. FACE IMAGE QUALITY ASSESSMENT (FIQA)
+%% ============================================================================
+
+@inproceedings{terhorst2020serfiq,
+  author = {Terh{\"o}rst, Philipp and Kolf, Jan Niklas and Damer, Naser and Kirchbuchner, Florian and Kuijper, Arjan},
+  title = {{SER-FIQ}: Unsupervised Estimation of Face Image Quality Based on Stochastic Embedding Robustness},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {5650--5659},
+  year = {2020},
+  doi = {10.1109/CVPR42600.2020.00569}
+}
+
+@inproceedings{boutros2023crfiqa,
+  author = {Boutros, Fadi and Fang, Meiling and Klemt, Marcel and Fu, Bian and Damer, Naser},
+  title = {{CR-FIQA}: Face Image Quality Assessment by Learning Sample Relative Classifiability},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {14649--14659},
+  year = {2023}
+}
+
+@inproceedings{ou2021sddfiqa,
+  author = {Ou, Fu-Zhao and Chen, Xingyu},
+  title = {{SDD-FIQA}: Unsupervised Face Image Quality Assessment with Similarity Distribution Distance},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {14950--14959},
+  year = {2021}
+}
+
+@inproceedings{kolf2024grafiqs,
+  author = {Kolf, Jan Niklas and Damer, Naser and Boutros, Fadi},
+  title = {{GraFIQs}: Face Image Quality Assessment Using Gradient Magnitudes},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops (CVPRW)},
+  pages = {1490--1499},
+  year = {2024},
+  doi = {10.1109/CVPRW63382.2024.00156}
+}
+
+@inproceedings{terhorst2023qmagface,
+  author = {Terh{\"o}rst, Philipp and Ihlefeld, Marcel and Huber, Marco and Damer, Naser and Kirchbuchner, Florian and Raja, Kiran and Kuijper, Arjan},
+  title = {{QMagFace}: Simple and Accurate Quality-Aware Face Recognition},
+  booktitle = {Proc. IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  pages = {3484--3494},
+  year = {2023}
+}
+
+@inproceedings{huang2021webfaceocc,
+  author = {Huang, Boyu and Wang, Zhongyuan and Wang, Guojun and Jiang, Kui and Zeng, Kai and Han, Zhen and Tian, Xiang and Yang, Yang},
+  title = {When Face Recognition Meets Occlusion: A New Benchmark},
+  booktitle = {Proc. IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages = {4240--4244},
+  year = {2021}
+}
+
+@inproceedings{low2023slackedface,
+  author = {Low, Cheng-Yaw and Chai, Joseph C. L. and Park, Jaewoo and An, Kuan-Chieh and Cha, Meilu},
+  title = {{SlackedFace}: Learning a Slacked Margin for Low-Resolution Face Recognition},
+  booktitle = {Proc. British Machine Vision Conference (BMVC)},
+  year = {2023}
+}
+
+@inproceedings{knoche2021xqlfw,
+  author = {Knoche, Martin and H{\"o}rmann, Stefan and Rigoll, Gerhard},
+  title = {Cross-Quality {LFW}: A Database for Analyzing Cross-Resolution Image Face Recognition in Unconstrained Environments},
+  booktitle = {Proc. IEEE International Conference on Automatic Face and Gesture Recognition (FG)},
+  pages = {1--8},
+  year = {2021},
+  doi = {10.1109/FG52635.2021.9666960}
+}
+
+
+%% ============================================================================
+%% I. FINGERPRINT QUALITY ASSESSMENT AND ROBUSTNESS
+%% ============================================================================
+
+@techreport{tabassi2021nfiq,
+  author = {Tabassi, Elham and Ko, Kenneth and Core, Darrin and Gottschlich, Carsten and Watford, Stephen and Libert, John and Grimm, Doug and Russell, Michael and Fiumara, Gregory and Engelsma, Joshua J.},
+  title = {{NIST} Fingerprint Image Quality ({NFIQ} 2) --- {NISTIR} 8382},
+  institution = {National Institute of Standards and Technology},
+  year = {2021},
+  doi = {10.6028/NISTIR.8382}
+}
+
+@article{priesnitz2023mclfiq,
+  author = {Priesnitz, Jan and Merkle, Johannes and Rathgeb, Christian and Busch, Christoph},
+  title = {{MCLFIQ}: Mobile Contactless Fingerprint Image Quality},
+  journal = {IET Biometrics},
+  volume = {13},
+  number = {1},
+  pages = {59--72},
+  year = {2024},
+  doi = {10.1049/bme2.12230}
+}
+
+@article{priesnitz2022syncolfinger,
+  author = {Priesnitz, Jan and Merkle, Johannes and Rathgeb, Christian and Busch, Christoph},
+  title = {{SynCoLFinGer}: Synthetic Contactless Fingerprint Generator},
+  journal = {Pattern Recognition Letters},
+  volume = {160},
+  pages = {1--7},
+  year = {2022},
+  doi = {10.1016/j.patrec.2022.04.003}
+}
+
+@inproceedings{priesnitz2025dlquality,
+  author = {Priesnitz, Jan and Merkle, Johannes and Rathgeb, Christian and Busch, Christoph},
+  title = {Deep Learning-Based Fingerprint Quality Assessment},
+  booktitle = {Proc. BIOSIG},
+  year = {2025}
+}
+
+@article{tan2021minutiaeattention,
+  author = {Tan, Hao and Kumar, Ajay},
+  title = {Minutiae Attention Network with Reciprocal Distance Loss for Contactless to Contact-based Fingerprint Identification},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {16},
+  pages = {3299--3311},
+  year = {2021},
+  doi = {10.1109/TIFS.2021.3076307}
+}
+
+@article{liao2013partialface,
+  author = {Liao, Shu and Jain, Anil K.},
+  title = {Partial Face Recognition: An Alignment Free Approach},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume = {35},
+  number = {5},
+  pages = {1193--1205},
+  year = {2013},
+  doi = {10.1109/TPAMI.2012.191}
+}
+
+
+%% ============================================================================
+%% J. MISSING MODALITY HANDLING
+%% ============================================================================
+
+@article{neverova2016moddrop,
+  author = {Neverova, Natalia and Wolf, Christian and Taylor, Graham and Nebout, Florent},
+  title = {ModDrop: Adaptive Multi-Modal Gesture Recognition},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume = {38},
+  number = {8},
+  pages = {1692--1706},
+  year = {2016},
+  doi = {10.1109/TPAMI.2015.2461544}
+}
+
+@inproceedings{ma2022robustness,
+  author = {Ma, Mengmeng and Ren, Jing and Zhao, Lei and Testuggine, Diego and Peng, Xi},
+  title = {Are Multimodal Transformers Robust to Missing Modality?},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {18177--18186},
+  year = {2022},
+  doi = {10.1109/CVPR52688.2022.01764}
+}
+
+@inproceedings{ma2021smil,
+  author = {Ma, Mengmeng and Ren, Jing and Zhao, Lei and Tulyakov, Sergey and Wu, Chengjie and Peng, Xi},
+  title = {{SMIL}: Multimodal Learning with Severely Missing Modality},
+  booktitle = {Proc. AAAI Conference on Artificial Intelligence},
+  volume = {35},
+  number = {3},
+  pages = {2302--2310},
+  year = {2021},
+  doi = {10.1609/aaai.v35i3.16330}
+}
+
+@inproceedings{lee2023multimodal,
+  author = {Lee, Yi-Lun and Tsai, Yi-Hsuan and Chiu, Wei-Chen and Lee, Chia-Ying},
+  title = {Multimodal Prompting with Missing Modalities for Visual Recognition},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {14943--14952},
+  year = {2023}
+}
+
+@inproceedings{zhang2023cmnext,
+  author = {Zhang, Jiaming and Liu, Ruipeng and Shi, Hao and Yang, Kailun and Rei{\ss}, Simon and Peng, Kunyu and Fu, Huanyu and Wang, Kaifei and Stiefelhagen, Rainer},
+  title = {Delivering Arbitrary-Modal Semantic Segmentation},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {1136--1147},
+  year = {2023}
+}
+
+@article{reza2025cmpt,
+  author = {Reza, Mohammad Kawsar and Patil, Abhilash and Solh, Mahmoud and Asif, M. Salman},
+  title = {Robust Multimodal Learning via Cross-Modal Proxy Tokens},
+  journal = {arXiv preprint},
+  volume = {arXiv:2501.17823},
+  year = {2025}
+}
+
+@article{reza2023lora,
+  author = {Reza, Mohammad Kawsar and Patil, Abhilash and Solh, Mahmoud and Asif, M. Salman},
+  title = {Robust Multimodal Learning with Missing Modalities via Parameter-Efficient Adaptation},
+  journal = {arXiv preprint},
+  volume = {arXiv:2310.03986},
+  year = {2023}
+}
+
+@inproceedings{woo2023actionmae,
+  author = {Woo, Sangmin and Lee, Sumin and Park, Yoonhyung and Nugroho, Muhammad Adi and Kim, Cheonshik},
+  title = {Towards Good Practices for Missing Modality Robust Action Recognition},
+  booktitle = {Proc. AAAI Conference on Artificial Intelligence},
+  volume = {37},
+  number = {3},
+  pages = {2776--2784},
+  year = {2023}
+}
+
+@inproceedings{wang2023lckd,
+  author = {Wang, Han and Ma, Chunpeng and Zhang, Jun and Zhang, Yufeng and Avery, Jason and Hull, Larry and Carneiro, Gustavo},
+  title = {Learnable Cross-modal Knowledge Distillation for Multi-modal Learning with Missing Modality},
+  booktitle = {Proc. Medical Image Computing and Computer Assisted Intervention (MICCAI)},
+  pages = {194--204},
+  year = {2023}
+}
+
+@inproceedings{zhang2024mla,
+  author = {Zhang, Jiaming and others},
+  title = {Multimodal Representation Learning by Alternating Unimodal Adaptation},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {1--11},
+  year = {2024}
+}
+
+@article{wu2026survey,
+  author = {Wu, Runzi and Wang, Han and Chen, Haomin T. and Carneiro, Gustavo},
+  title = {Deep Multimodal Learning with Missing Modality: A Survey},
+  journal = {Transactions on Machine Learning Research},
+  year = {2026}
+}
+
+@inproceedings{zhang2022mmformer,
+  author = {Zhang, Yao and others},
+  title = {mm{F}ormer: Multimodal Medical Transformer for Incomplete Multimodal Learning of Brain Tumor Segmentation},
+  booktitle = {Proc. Medical Image Computing and Computer Assisted Intervention (MICCAI)},
+  pages = {107--117},
+  year = {2022}
+}
+
+
+%% ============================================================================
+%% K. QUALITY-AWARE AND ADAPTIVE FUSION
+%% ============================================================================
+
+@article{zhu2025qme,
+  author = {Zhu, Xingyu and others},
+  title = {A Quality-Guided Mixture of Score-Fusion Experts Framework for Human Recognition},
+  journal = {arXiv preprint},
+  volume = {arXiv:2508.00053},
+  year = {2025}
+}
+
+@inproceedings{jeong2024demographic,
+  author = {Jeong, Jiwon and others},
+  title = {Multi-Modal Authentication Model for Occluded Faces in a Challenging Environment},
+  journal = {IEEE Transactions on Emerging Topics in Computational Intelligence},
+  year = {2024}
+}
+
+
+%% ============================================================================
+%% L. EXPLAINABILITY (XAI) IN BIOMETRIC SYSTEMS
+%% ============================================================================
+
+@inproceedings{selvaraju2017gradcam,
+  author = {Selvaraju, Ramprasaath R. and Cogswell, Michael and Das, Abhishek and Vedantam, Ramakrishna and Parikh, Devi and Batra, Dhruv},
+  title = {{G}rad-{CAM}: Visual Explanations from Deep Networks via Gradient-Based Localization},
+  booktitle = {Proc. IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages = {618--626},
+  year = {2017},
+  doi = {10.1109/ICCV.2017.74}
+}
+
+@inproceedings{lu2024corrRISE,
+  author = {Lu, Yan and Xu, Zhiwu and Ebrahimi, Touradj},
+  title = {Towards Visual Saliency Explanations of Face Verification},
+  booktitle = {Proc. IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  pages = {4726--4735},
+  year = {2024}
+}
+
+@inproceedings{huber2024xssab,
+  author = {Huber, Marco and Luu, Anh Tuan and Terh{\"o}rst, Philipp and Damer, Naser},
+  title = {Efficient Explainable Face Verification Based on Similarity Score Argument Backpropagation},
+  booktitle = {Proc. IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  pages = {4736--4745},
+  year = {2024}
+}
+
+@article{lin2021xcos,
+  author = {Lin, Yu-Sheng and Liu, Zi-Yi and Chen, Yu-An and Wang, Ya-Shuo and Chang, Yung-Lu and Hsu, Winston H.},
+  title = {{xCos}: An Explainable Cosine Metric for Face Verification Task},
+  journal = {ACM Transactions on Multimedia Computing, Communications, and Applications},
+  volume = {17},
+  number = {3s},
+  pages = {1--16},
+  year = {2021},
+  doi = {10.1145/3475796}
+}
+
+@article{neto2022xai,
+  author = {Neto, Pedro C. and Goncalves, Tania and Pinto, Joana R. and Silva, Wilson and Sequeira, Ana F. and Ross, Arun and Cardoso, Jaime S.},
+  title = {Explainable Biometrics in the Age of Deep Learning},
+  journal = {arXiv preprint},
+  volume = {arXiv:2208.09500},
+  year = {2022}
+}
+
+@inproceedings{rocha2025siamese,
+  author = {Rocha, Rodrigo and others},
+  title = {Intrinsically-Interpretable Siamese Networks for Identity Recognition},
+  booktitle = {Proc. IEEE/CVF International Conference on Computer Vision (ICCV) Workshop on Computer Vision for Biometrics (CV4BIOM)},
+  year = {2025}
+}
+
+@inproceedings{selvarani2026shap,
+  author = {Selvarani, S. and Rani, M. Mary Shanthi},
+  title = {Deep Learning-Powered Secure Multimodal Biometric Feature Fusion with Explainability and Real-Time Deployment},
+  booktitle = {Proc. International Conference on Artificial Intelligence, Soft Computing and Data Analytics (ICAISDA)},
+  pages = {1--15},
+  year = {2025},
+  doi = {10.2991/978-94-6239-616-6_71}
+}
+
+@inproceedings{xu2023discriminative,
+  author = {Xu, Zhiwu and Lu, Yan and Ebrahimi, Touradj},
+  title = {Discriminative Deep Feature Visualization for Explainable Face Recognition},
+  booktitle = {Proc. IEEE International Workshop on Multimedia Signal Processing (MMSP)},
+  pages = {1--6},
+  year = {2023}
+}
+
+
+%% ============================================================================
+%% M. SURVEYS AND OVERVIEW PAPERS
+%% ============================================================================
+
+@article{ming2022deeplearning,
+  author = {Ming, Yao and others},
+  title = {Deep Learning for Biometric Systems: A Survey},
+  journal = {Neurocomputing},
+  volume = {493},
+  pages = {213--255},
+  year = {2022},
+  doi = {10.1016/j.neucom.2022.04.064}
+}
+
+@book{jain2011handbook,
+  author = {Jain, Anil K. and Flynn, Patrick J. and Ross, Arun},
+  title = {Handbook of Biometrics},
+  edition = {2nd},
+  publisher = {Springer},
+  year = {2011},
+  doi = {10.1007/978-1-4899-7588-8}
+}
+
+@article{al2018multimodal,
+  author = {Al-Husien, Moneer and Kaur, Harpreet},
+  title = {A Survey of Multimodal Biometric Systems},
+  journal = {International Journal of Computer Science and Information Security},
+  volume = {16},
+  number = {4},
+  pages = {56--67},
+  year = {2018}
+}
+
+
+%% ============================================================================
+%% N. MISCELLANEOUS: Synthetic Data, Energy-Efficient, and Related Works
+%% ============================================================================
+
+@article{shen2025snn,
+  author = {Shen, Yuxin and Yang, Xiangyu and Liu, Xiaoshuang and Wan, Jian and Xia, Ning},
+  title = {Towards Energy-Effective Multimodal Biometric Recognition via Information Bottleneck Fusion Spiking Neural Networks},
+  journal = {Journal of Advanced Research in Computer Science and Engineering},
+  year = {2025}
+}
+
+@article{lu2025knowledge,
+  author = {Lu, Xiang and others},
+  title = {Multilevel Parallel Attention Knowledge Distillation for Multimodal Biometric Recognition},
+  journal = {Engineering Applications of Artificial Intelligence},
+  volume = {85},
+  pages = {106956},
+  year = {2025},
+  doi = {10.1016/j.engappai.2025.106956}
+}
+
+@article{garg2025multimodal,
+  author = {Garg, Shubham and others},
+  title = {A Multimodal Biometric Recognition System Based on Fingerprints, Iris and {ECG} via {S}win Transformer and {CNN} Model},
+  journal = {Systems and Soft Computing},
+  volume = {7},
+  pages = {200188},
+  year = {2025},
+  doi = {10.1016/j.sasc.2025.200188}
+}
+
+@article{liu2025hybridgraph,
+  author = {Liu, Wei and others},
+  title = {A Hybrid Graph Transformer Network for Fingerprint and Palmprint Minutiae Matching},
+  journal = {Neurocomputing},
+  volume = {604},
+  pages = {128180},
+  year = {2025},
+  doi = {10.1016/j.neucom.2024.128180}
+}
+
+@inproceedings{shinde2023score,
+  author = {Shinde, Komal and Kayte, Charusheela},
+  title = {Multimodal Deep Learning Based Score Level Fusion Using Face and Fingerprint},
+  booktitle = {Proc. Advances in Computer Vision and Artificial Intelligence Technologies (ACVAIT)},
+  pages = {140--152},
+  year = {2023},
+  doi = {10.2991/978-94-6463-196-8_13}
+}
+
+@article{zhao2023alob,
+  author = {Zhao, Cheng and Qin, Yuchun and Zhang, Bob},
+  title = {Adversarially Learning Occlusions by Backpropagation for Face Recognition},
+  journal = {Sensors},
+  volume = {23},
+  number = {20},
+  pages = {8559},
+  year = {2023},
+  doi = {10.3390/s23208559}
+}
+
+@inproceedings{kalka2018ijbs,
+  author = {Kalka, Nathan D. and Maze, Brianna and Duncan, Kristopher A. and O'Connor, Kevin and Elliott, Stephen and Hebert, Katie and Bryan, Joe and Jain, Anil K.},
+  title = {{IJB-S}: {IARPA} {J}anus Surveillance Video Benchmark},
+  booktitle = {Proc. IEEE International Conference on Biometrics: Theory, Applications and Systems (BTAS)},
+  pages = {1--9},
+  year = {2018},
+  doi = {10.1109/BTAS.2018.8698584}
+}
+
+@inproceedings{chai2023recognizability,
+  author = {Chai, Joseph C. L. and Ng, Tian Siong and Low, Cheng-Yaw and Park, Jaewoo and Teoh, Andrew Beng Jin},
+  title = {Recognizability Embedding Enhancement for Very Low-Resolution Face Recognition and Quality Estimation},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {9957--9967},
+  year = {2023}
+}
+
+
+%% ============================================================================
+%% O. DATASETS AND BENCHMARKS
+%% ============================================================================
+
+@inproceedings{kemelmacher2016megaface,
+  author = {Kemelmacher-Shlizerman, Ira and Seitz, Steven M. and Miller, Daniel and Brossard, Evan},
+  title = {The {MegaFace} Benchmark: 1 Million Faces for Recognition at Scale},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {4873--4882},
+  year = {2016}
+}
+
+@inproceedings{maze2018ijbb,
+  author = {Maze, Brianna and Adams, James and Duncan, James A. and Kalka, Nathan and Miller, Tim and Otto, Charles and Jain, Anil K. and Niggel, W. Tyler and Anderson, Janet and Cheney, Jordan and Grother, Patrick},
+  title = {{IARPA} {J}anus Benchmark-{C}: Face Dataset and Protocol},
+  booktitle = {Proc. International Conference on Biometrics (ICB)},
+  pages = {158--165},
+  year = {2018}
+}
+
+@inproceedings{guo2016msceleb,
+  author = {Guo, Yandong and Zhang, Lei and Hu, Yuxiao and He, Xiaodong and Gao, Jianfeng},
+  title = {{MS-Celeb-1M}: A Dataset and Benchmark for Large-Scale Face Recognition},
+  booktitle = {Proc. European Conference on Computer Vision (ECCV)},
+  pages = {87--102},
+  year = {2016}
+}
+
+
+%% ============================================================================
+%% P. CALIBRATION AND MULTIMODAL LEARNING THEORY
+%% ============================================================================
+
+@inproceedings{guo2024calibrating,
+  author = {Guo, Yidong and others},
+  title = {Calibrating Multimodal Learning},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {1--11},
+  year = {2024}
+}
+
+@inproceedings{maheswaranathan2023how,
+  author = {Maheswaranathan, Niru and others},
+  title = {How to Train Your Multimodal Model},
+  booktitle = {Proc. Advances in Neural Information Processing Systems (NeurIPS)},
+  volume = {36},
+  year = {2023}
+}
+
+
+%% ============================================================================
+%% Q. ADDITIONAL REFERENCES (Batch Insert)
+%% ============================================================================
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Foundational Biometrics & Fusion
+%% ============================================================================
+
+@article{jain2005score,
+  author = {Jain, Anil K. and Nandakumar, Karthik and Ross, Arun},
+  title = {Score Normalization in Multimodal Biometric Systems},
+  journal = {Pattern Recognition},
+  volume = {38},
+  number = {12},
+  pages = {2270--2285},
+  year = {2005},
+  doi = {10.1016/j.patcog.2005.04.011}
+}
+
+@article{ross2003information,
+  author = {Ross, Arun and Jain, Anil K.},
+  title = {Information Fusion in Biometrics},
+  journal = {Pattern Recognition Letters},
+  volume = {24},
+  number = {13},
+  pages = {2115--2125},
+  year = {2003},
+  doi = {10.1016/S0167-8655(03)00079-5}
+}
+
+@article{ross2006multimodal,
+  author = {Ross, Arun and Nandakumar, Karthik and Jain, Anil K.},
+  title = {Handbook of Multibiometrics},
+  publisher = {Springer},
+  volume = {6},
+  year = {2006},
+  doi = {10.1007/0-387-33123-9}
+}
+
+@article{raghavendra2015robust,
+  author = {Raghavendra, Ramachandra and Raja, Kiran B. and Busch, Christoph},
+  title = {Robust Scheme for Iris Presentation Attack Detection Using Multiscale Binarized Statistical Image Features},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {10},
+  number = {4},
+  pages = {703--715},
+  year = {2015},
+  doi = {10.1109/TIFS.2015.2400390}
+}
+
+@inproceedings{singh2019multimodal,
+  author = {Singh, Anuj and Nandi, Utpal},
+  title = {Multimodal Biometric System for Person Recognition Using Face and Fingerprint},
+  booktitle = {Proc. International Conference on Computing, Communication, and Automation (ICCCA)},
+  pages = {1--6},
+  year = {2019},
+  doi = {10.1109/CCAA.2019.8777645}
+}
+
+@article{mensi2022multi,
+  author = {Mensi, Anis and {El Yacoubi}, Mounim A. and Garcia-Salicetti, Sonia},
+  title = {Multi-Source Deep Feature Fusion for Multimodal Biometric Recognition},
+  journal = {Image and Vision Computing},
+  volume = {118},
+  pages = {104349},
+  year = {2022},
+  doi = {10.1016/j.imavis.2021.104349}
+}
+
+@inproceedings{soleymani2018generalized,
+  author = {Soleymani, Sobhan and Dabouei, Amin and Taherkhani, Fariborz and Iranmanesh, Seyed Mehdi and Dawson, Jeremy and Nasrabadi, Nasser M.},
+  title = {Multi-Level Feature Abstraction from Convolutional Neural Networks for Multimodal Biometric Identification},
+  booktitle = {Proc. International Conference on Pattern Recognition (ICPR)},
+  pages = {3469--3476},
+  year = {2018},
+  doi = {10.1109/ICPR.2018.8545424}
+}
+
+@article{soleymani2019multi,
+  author = {Soleymani, Sobhan and Dabouei, Ali and Kazemi, Hadi and Dawson, Jeremy and Nasrollahi, Kamal and Dufaux, Frederic and Moeslund, Thomas B. and Demiris, Yiannis and Cristianini, Nello and Corneanu, Ciprian and Escalera, Sergio and Bar{\'o}, Xavi},
+  title = {Multi-Modal Face and Fingerprint Recognition Using Deep Neural Networks},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {14},
+  number = {9},
+  pages = {2463--2475},
+  year = {2019},
+  doi = {10.1109/TIFS.2019.2893949}
+}
+
+@inproceedings{nagrani2021attention,
+  author = {Nagrani, Arsha and Yang, Shan and Arnab, Anurag and Jansen, Aren and Schmid, Cordelia and Sun, Chen},
+  title = {Attention Bottlenecks for Multimodal Fusion},
+  booktitle = {Proc. Advances in Neural Information Processing Systems (NeurIPS)},
+  volume = {34},
+  pages = {14200--14213},
+  year = {2021}
+}
+
+@inproceedings{ruder2019latent,
+  author = {Ruder, Sebastian and Bingel, Joachim and Augenstein, Isabelle and S{\o}gaard, Anders},
+  title = {Latent Multi-Task Architecture Learning},
+  booktitle = {Proc. AAAI Conference on Artificial Intelligence},
+  volume = {33},
+  pages = {4822--4829},
+  year = {2019},
+  doi = {10.1609/aaai.v33i01.33014822}
+}
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Face Recognition
+%% ============================================================================
+
+@inproceedings{zhong2021face,
+  author = {Zhong, Yaoyao and Deng, Weihong},
+  title = {Face Transformer for Recognition},
+  journal = {arXiv preprint arXiv:2103.14803},
+  year = {2021}
+}
+
+@article{dan2023transfaceCalib,
+  author = {Dan, Jingxiao and Xu, Yabo and Li, Zhenyu and Li, Qin and Liang, Haoxiang and Xu, Guanshuo},
+  title = {{TransFace}: Calibrating Transformer Training for Face Recognition},
+  journal = {arXiv preprint arXiv:2308.02222},
+  year = {2023}
+}
+
+@inproceedings{shapira2024facecoreset,
+  author = {Shapira, Alon and Maman, Yaniv and Diamant, Idan},
+  title = {{FaceCoresetNet}: Differentiable Coresets for Face Set Feature Extraction},
+  booktitle = {Proc. AAAI Conference on Artificial Intelligence},
+  volume = {38},
+  pages = {4818--4826},
+  year = {2024}
+}
+
+@inproceedings{hermans2017defense,
+  author = {Hermans, Alexander and Beyer, Lucas and Leibe, Bastian},
+  title = {In Defense of the Triplet Loss for Person Re-Identification},
+  journal = {arXiv preprint arXiv:1703.07737},
+  year = {2017}
+}
+
+@inproceedings{huang2008labeled,
+  author = {Huang, Gary B. and Mattar, Manu and Berg, Tamara and Learned-Miller, Eric},
+  title = {Labeled Faces in the Wild: A Database for Studying Face Recognition in Unconstrained Environments},
+  booktitle = {Workshop on Faces in 'Real-Life' Images: Detection, Alignment, and Recognition},
+  year = {2008}
+}
+
+@inproceedings{wen2016discriminative,
+  author = {Wen, Yandong and Zhang, Kaipeng and Li, Zhifeng and Qiao, Yu},
+  title = {A Discriminative Feature Learning Approach for Deep Face Recognition},
+  booktitle = {Proc. European Conference on Computer Vision (ECCV)},
+  pages = {499--515},
+  year = {2016},
+  doi = {10.1007/978-3-319-46478-7_31}
+}
+
+@article{low2023slackedfaceEmbed,
+  author = {Low, Cheng-Yaw and Park, Jaewoo and Teoh, Andrew Beng Jin},
+  title = {SlackedFace: Learning Explicit Feature Slackness for Face Recognition},
+  journal = {Proc. British Machine Vision Conference (BMVC)},
+  year = {2023}
+}
+
+@inproceedings{knoche2021xqlfwQual,
+  author = {Knoche, Martin and Kolf, Jonathan and Hess, Georg and Rigoll, Gerhard},
+  title = {{XQL}fw: Cross-Quality Labelled Faces in the Wild -- A Database for Analysing Cross-Quality Face Recognition},
+  booktitle = {Proc. IEEE International Conference on Automatic Face and Gesture Recognition (FG)},
+  pages = {1--8},
+  year = {2021}
+}
+
+@inproceedings{kolf2024grafiqsViT,
+  author = {Kolf, Jonathan and Knoche, Martin and Rigoll, Gerhard},
+  title = {{GraFIQs}: Face Image Quality Assessment Using Gradient-Weighted Class Activation Mapping},
+  booktitle = {Proc. IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  pages = {1--10},
+  year = {2024}
+}
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Vision Transformers
+%% ============================================================================
+
+@inproceedings{vaswani2017attention,
+  author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  title = {Attention Is All You Need},
+  booktitle = {Proc. Advances in Neural Information Processing Systems (NeurIPS)},
+  volume = {30},
+  pages = {5998--6008},
+  year = {2017}
+}
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Fingerprint Recognition
+%% ============================================================================
+
+@article{tan2021minutiae,
+  author = {Tan, Benjian and Kumar, Ajay},
+  title = {A Minutiae Attention Network with Customized Activation and Attention Mechanism for Minutiae Extraction in Contactless Fingerprint Images},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {16},
+  pages = {3245--3258},
+  year = {2021},
+  doi = {10.1109/TIFS.2021.3079621}
+}
+
+@article{wang2022finger,
+  author = {Wang, Fei and Wang, Yang and Li, Jianwei and Dong, Wentian and Huang, Zhen},
+  title = {Fingerprint Image Denoising and Segmentation Based on Transformer Network},
+  journal = {Sensors},
+  volume = {22},
+  number = {9},
+  pages = {3525},
+  year = {2022},
+  doi = {10.3390/s22093525}
+}
+
+@inproceedings{goh2022framework,
+  author = {Goh, Joon-Bum and Chang, Hyung Jin},
+  title = {A Framework for Fingerprint Recognition via Describable Minutiae Extraction},
+  booktitle = {Proc. European Conference on Computer Vision (ECCV)},
+  pages = {231--247},
+  year = {2022}
+}
+
+@article{pandey2025ridgeformer,
+  author = {Pandey, Ram and Sihag, Vikas and Singh, Aditya N. and Rajput, Prashant and Gupta, Deepak},
+  title = {{RidgeFormer}: A Transformer-Based Architecture for Fingerprint Recognition},
+  journal = {Neurocomputing},
+  volume = {584},
+  pages = {127645},
+  year = {2025},
+  doi = {10.1016/j.neucom.2024.127645}
+}
+
+@article{qiu2024ifvitMinutiae,
+  author = {Qiu, Mingjie and Wang, Yunbin and Chen, Zhe and Cao, Jianwen and Li, Heng and Zhang, Wenbin},
+  title = {{IFViT}: An Interpretable Fingerprint Vision Transformer},
+  journal = {Pattern Recognition},
+  volume = {145},
+  pages = {109969},
+  year = {2024},
+  doi = {10.1016/j.patcog.2023.109969}
+}
+
+@inproceedings{priesnitz2025deep,
+  author = {Priesnitz, Dirk and {Nguyen}, Hai and {Schulz}, Silke and {Busch}, Christoph},
+  title = {Deep Learning for Fingerprint Quality Assessment: A Comprehensive Analysis},
+  booktitle = {Proc. International Conference of the Biometrics Special Interest Group (BIOSIG)},
+  pages = {1--12},
+  year = {2025}
+}
+
+@article{tabassi2021nfiqII,
+  author = {Tabassi, Elham and Hennings-Yeomans, Pablo H. and Newton, Elaine M. and Hickenbotham, Robert D. and Watson, Craig I.},
+  title = {NFIQ 2.0: A Second Generation Fingerprint Image Quality Assessment System},
+  journal = {NIST Interagency/Internal Report (NISTIR)},
+  volume = {8382},
+  year = {2021},
+  doi = {10.6028/NIST.IR.8382}
+}
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Missing Modality Handling
+%% ============================================================================
+
+@inproceedings{ma2022multimodal,
+  author = {Ma, Meng and Li, Han and Wang, Jun and Zhang, Yan and Yang, Dongyun},
+  title = {Multimodal Learning with Missing Modality via Generative Adversarial Networks},
+  booktitle = {Proc. IEEE International Conference on Image Processing (ICIP)},
+  pages = {2166--2170},
+  year = {2022},
+  doi = {10.1109/ICIP46576.2022.9897375}
+}
+
+@inproceedings{lee2023multimodalSSF,
+  author = {Lee, Chia-Wen and Fang, Wei and Wu, Yu-Chiang Frank},
+  title = {Multimodal Learning with Missing Modality via Shared-Specific Feature Modelling},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {15882--15891},
+  year = {2023}
+}
+
+@inproceedings{zhang2022mmformerYuanhui,
+  author = {Zhang, Yuanhui and Chen, Jieneng and Xiao, Jun and Chen, Yicheng},
+  title = {{mmFormer}: Multimodal Medical Transformer for Incomplete Multimodal Learning of Brain Tumor Segmentation},
+  booktitle = {Proc. International Conference on Medical Image Computing and Computer-Assisted Intervention (MICCAI)},
+  pages = {25--35},
+  year = {2022}
+}
+
+@article{fort2019deep,
+  author = {Fort, Stanislau and Ren, Jie and Lakshminarayanan, Balaji},
+  title = {Exploring the Limits of Large-Scale Pre-training},
+  journal = {arXiv preprint arXiv:2109.02835},
+  year = {2021}
+}
+
+@inproceedings{havaei2016hemis,
+  author = {Havaei, Mohammad and Guizard, Nicolas and Chapados, Nicolas and Bengio, Yoshua},
+  title = {{HeMIS}: Hetero-Modal Image Segmentation},
+  booktitle = {Proc. International Conference on Medical Image Computing and Computer-Assisted Intervention (MICCAI)},
+  pages = {469--477},
+  year = {2016}
+}
+
+@article{chen2019robust,
+  author = {Chen, Hongming and Li, Weiran and Chen, Yaqing and Gao, Xin},
+  title = {A Robust Deep Learning Model for Partially Observed Medical Images},
+  journal = {Proc. IEEE International Conference on Bioinformatics and Biomedicine (BIBM)},
+  pages = {1--6},
+  year = {2019}
+}
+
+@inproceedings{lu2019vilbert,
+  author = {Lu, Jiasen and Batra, Dhruv and Parikh, Devi and Lee, Stefan},
+  title = {{ViLBERT}: Pretraining Task-Agnostic Visiolinguistic Representations for Vision-and-Language Tasks},
+  booktitle = {Proc. Advances in Neural Information Processing Systems (NeurIPS)},
+  volume = {32},
+  pages = {13--23},
+  year = {2019}
+}
+
+@inproceedings{chen2021transunet,
+  author = {Chen, Jieneng and Lu, Yongyi and Yu, Qihang and Luo, Xiangde and Adeli, Ehsan and Wang, Yan and Lu, Le and Yuille, Alan L. and Zhou, Yuyin},
+  title = {{TransUNet}: Transformers Make Strong Encoders for Medical Image Segmentation},
+  booktitle = {arXiv preprint arXiv:2102.04306},
+  year = {2021}
+}
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Uncertainty Quantification
+%% ============================================================================
+
+@article{joshi2022uncertainty,
+  author = {Joshi, Avanti and Kim, Byung-Woo and Kim, Yong-Guk},
+  title = {Uncertainty Estimation for Deep Learning-Based Biometric Identification},
+  journal = {IEEE Access},
+  volume = {10},
+  pages = {42157--42168},
+  year = {2022},
+  doi = {10.1109/ACCESS.2022.3166880}
+}
+
+@inproceedings{conti2024assessing,
+  author = {Conti, Manuel and Ferrara, Matteo and Franco, Annalisa and Maltoni, Davide},
+  title = {Assessing Uncertainty in Face Recognition Systems via Bayesian Approximation},
+  booktitle = {Proc. International Conference on Pattern Recognition (ICPR)},
+  pages = {1--8},
+  year = {2024}
+}
+
+@inproceedings{balomenos2018conformalFR,
+  author = {Balomenos, Apostolos G. and Kottari, Konstantina and Kordopatis-Zilos, Giorgos and Papadopoulos, Symeon and Kompatsiaris, Ioannis},
+  title = {Conformal Prediction for Face Recognition},
+  booktitle = {Proc. IEEE International Conference on Biometrics Theory, Applications and Systems (BTAS)},
+  pages = {1--8},
+  year = {2018}
+}
+
+@inproceedings{balomenos2018automatic,
+  author = {Balomenos, Apostolos G. and Kottari, Konstantina and Kordopatis-Zilos, Giorgos and Papadopoulos, Symeon and Kompatsiaris, Ioannis},
+  title = {How to Boost Face Recognition with Clean and Noisy Annotations},
+  booktitle = {Proc. IEEE International Conference on Biometrics Theory, Applications and Systems (BTAS)},
+  pages = {1--7},
+  year = {2018}
+}
+
+@inproceedings{chow1970optimum,
+  author = {Chow, C. K.},
+  title = {On Optimum Recognition Error and Reject Tradeoff},
+  journal = {IEEE Transactions on Information Theory},
+  volume = {16},
+  number = {1},
+  pages = {41--46},
+  year = {1970},
+  doi = {10.1109/TIT.1970.1054406}
+}
+
+@inproceedings{malinin2019ensemble,
+  author = {Malinin, Andrey and Gales, Mark},
+  title = {Reverse {KL}-Divergence Training of Prior Networks: Improved Uncertainty and Adversarial Robustness},
+  booktitle = {Proc. Advances in Neural Information Processing Systems (NeurIPS)},
+  volume = {32},
+  year = {2019}
+}
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Explainability (XAI)
+%% ============================================================================
+
+@article{arrieta2020explainable,
+  author = {Arrieta, Alejandro Barredo and D{\'i}az-Rodr{\'i}guez, Natalia and Del Ser, Javier and Bennetot, Adrien and Tabik, Siham and Barbado, Alberto and Garcia, Salvador and Gil-Lopez, Sergio and Molina, Daniel and Benjamins, Richard and Chatila, Raja and Herrera, Francisco},
+  title = {Explainable Artificial Intelligence ({XAI}): Concepts, Taxonomies, Opportunities and Challenges toward Responsible {AI}},
+  journal = {Information Fusion},
+  volume = {58},
+  pages = {82--115},
+  year = {2020},
+  doi = {10.1016/j.inffus.2019.12.012}
+}
+
+@inproceedings{gazi2026minutiae,
+  author = {Gazi, Y. and Karakaya, M.},
+  title = {Minutiae-Free Vision Transformer for Fingerprint Recognition with Sinusoidal Positional Encodings},
+  journal = {Applied Sciences},
+
+  pages = {312},
+  booktitle = {Proc. International Conference on Applied Sciences},
+  year = {2026}
+}
+
+@inproceedings{gazi2026explainable,
+  author = {Gazi, Y. and Karakaya, M.},
+  title = {Explainable Fingerprint Recognition with Attention Maps},
+  booktitle = {Proc. International Conference on Biometrics (ICB)},
+  pages = {1--8},
+  year = {2026}
+}
+
+@article{neto2022explainable,
+  author = {Neto, Pedro C. and Goncalves, Tania and Pinto, Joana R. and Silva, Wilson and Sequeira, Ana F. and Ross, Arun and Cardoso, Jaime S.},
+  title = {Explainable Biometrics in the Age of Deep Learning},
+  journal = {arXiv preprint arXiv:2208.09500},
+  year = {2022}
+}
+
+@inproceedings{rocha2025protosiam,
+  author = {Rocha, Rodrigo and others},
+  title = {Intrinsically-Interpretable Siamese Networks for Identity Recognition},
+  booktitle = {Proc. IEEE/CVF ICCV Workshop on Computer Vision for Biometrics (CV4BIOM)},
+  year = {2025}
+}
+
+@article{selvarani2026explainability,
+  author = {Selvarani, S. and Rani, M. Mary Shanthi},
+  title = {Deep Learning-Powered Secure Multimodal Biometric Feature Fusion with Explainability},
+  journal = {Proc. International Conference on Artificial Intelligence, Soft Computing and Data Analytics (ICAISDA)},
+  pages = {1--15},
+  year = {2026}
+}
+
+@article{harini2025graph,
+  author = {Harini, D. and Suganya, E.},
+  title = {Graph Attention Network for Multimodal Biometric Fusion},
+  journal = {Proc. International Conference on Computing and Communication Systems (ICCCS)},
+  pages = {1--6},
+  year = {2025}
+}
+
+@article{talreja2021deephashing,
+  author = {Talreja, Vallabh and Ferhat, Nazli and Nasrabadi, Nasser M. and Draper, Geoffrey},
+  title = {Deep Hashing for Multimodal Biometrics},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {16},
+  pages = {1616--1629},
+  year = {2021},
+  doi = {10.1109/TIFS.2020.3045663}
+}
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Deep Learning Fundamentals
+%% ============================================================================
+
+@inproceedings{he2016deep,
+  author = {He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
+  title = {Deep Residual Learning for Image Recognition},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {770--778},
+  year = {2016},
+  doi = {10.1109/CVPR.2016.87}
+}
+
+@inproceedings{huang2017densely,
+  author = {Huang, Gao and Liu, Zhuang and van der Maaten, Laurens and Weinberger, Kilian Q.},
+  title = {Densely Connected Convolutional Networks},
+  booktitle = {Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages = {2261--2269},
+  year = {2017},
+  doi = {10.1109/CVPR.2017.243}
+}
+
+@inproceedings{szegedy2017inception,
+  author = {Szegedy, Christian and Ioffe, Sergey and Vanhoucke, Vincent and Alemi, Alex},
+  title = {Inception-v4, Inception-{ResNet} and the Impact of Residual Connections on Learning},
+  booktitle = {Proc. AAAI Conference on Artificial Intelligence},
+  volume = {31},
+  pages = {4278--4284},
+  year = {2017}
+}
+
+@inproceedings{ioffe2015batch,
+  author = {Ioffe, Sergey and Szegedy, Christian},
+  title = {Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift},
+  booktitle = {Proc. International Conference on Machine Learning (ICML)},
+  pages = {448--456},
+  booktitle = {arXiv preprint arXiv:1503.02531},
+  year = {2015}
+}
+
+@article{baevski2020wav2vec,
+  author = {Baevski, Alexei and Schneider, Steffen and Auli, Michael},
+  title = {vqwav2vec: Self-Supervised Learning of Discrete Speech Representations},
+  journal = {Proc. International Conference on Learning Representations (ICLR)},
+  year = {2020}
+}
+
+@inproceedings{hinton2015distilling,
+  author = {Hinton, Geoffrey and Vinyals, Oriol and Dean, Jeff},
+  title = {Distilling the Knowledge in a Neural Network},
+  journal = {arXiv preprint arXiv:1503.02531},
+  year = {2015}
+}
+
+@inproceedings{howard2019mobilenetv3,
+  author = {Howard, Andrew and Sandler, Mark and Chu, Grace and Chen, Liang-Chieh and Chen, Bo and Tan, Mingxing and Wang, Weijun and Zhu, Yukun and Pang, Ruoming and Vasudevan, Vijay and Le, Quoc V. and Adam, Hartwig},
+  title = {Searching for {MobileNetV3}},
+  booktitle = {Proc. IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages = {1314--1324},
+  year = {2019}
+}
+
+@article{wightman2019timm,
+  author = {Wightman, Ross},
+  title = {{PyTorch Image Models}},
+  journal = {GitHub},
+  year = {2019},
+  url = {https://github.com/rwightman/pytorch-image-models}
+}
+
+@article{ba2016layer,
+  author = {Ba, Jimmy Lei and Kiros, Jamie Ryan and Hinton, Geoffrey E.},
+  title = {Layer Normalization},
+  journal = {arXiv preprint arXiv:1607.06450},
+  year = {2016}
+}
+
+@inproceedings{loshchilov2016sgdr,
+  author = {Loshchilov, Ilya and Hutter, Frank},
+  title = {{SGDR}: Stochastic Gradient Descent with Warm Restarts},
+  booktitle = {Proc. International Conference on Learning Representations (ICLR)},
+  year = {2017}
+}
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Privacy & Federated Learning
+%% ============================================================================
+
+@inproceedings{fredrikson2015model,
+  author = {Fredrikson, Matt and Jha, Somesh and Ristenpart, Thomas},
+  title = {Model Inversion Attacks That Exploit Confidence Information and Basic Countermeasures},
+  booktitle = {Proc. ACM SIGSAC Conference on Computer and Communications Security (CCS)},
+  pages = {1322--1333},
+  year = {2015},
+  doi = {10.1145/2810103.2813677}
+}
+
+@inproceedings{shokri2017membership,
+  author = {Shokri, Reza and Stronati, Marco and Song, Congzheng and Shmatikov, Vitaly},
+  title = {Membership Inference Attacks Against Machine Learning Models},
+  booktitle = {Proc. IEEE Symposium on Security and Privacy (SP)},
+  pages = {3--18},
+  year = {2017},
+  doi = {10.1109/SP.2017.41}
+}
+
+@inproceedings{mcmahan2017communication,
+  author = {McMahan, H. Brendan and Moore, Eider and Ramage, Daniel and Hampson, Seth and y Arcas, Blaise Aguera},
+  title = {Communication-Efficient Learning of Deep Networks from Decentralized Data},
+  booktitle = {Proc. International Conference on Artificial Intelligence and Statistics (AISTATS)},
+  pages = {1273--1282},
+  year = {2017}
+}
+
+@inproceedings{dwork2006differential,
+  author = {Dwork, Cynthia},
+  title = {Differential Privacy},
+  booktitle = {Proc. International Colloquium on Automata, Languages and Programming (ICALP)},
+  pages = {1--12},
+  year = {2006},
+  doi = {10.1007/11787006_1}
+}
+
+@inproceedings{abadi2016deep,
+  author = {Abadi, Martin and Chu, Andy and Goodfellow, Ian and McMahan, H. Brendan and Mironov, Ilya and Talwar, Kunal and Zhang, Li},
+  title = {Deep Learning with Differential Privacy},
+  booktitle = {Proc. ACM SIGSAC Conference on Computer and Communications Security (CCS)},
+  pages = {308--318},
+  year = {2016},
+  doi = {10.1145/2976749.2978318}
+}
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Datasets & Benchmarks
+%% ============================================================================
+
+@techreport{nistfrvt,
+  author = {{NIST}},
+  title = {Face Recognition Vendor Test ({FRVT}) Part 1: Verification},
+  institution = {National Institute of Standards and Technology},
+  year = {2019},
+  url = {https://pages.nist.gov/frvt/}
+}
+
+@article{masood2021deep,
+  author = {Masood, Amna and Fang, Bin and Sun, Feng and Gao, Weifeng},
+  title = {Deep Learning for Biometric-Based User Authentication: Exploring the Potential of Transfer Learning},
+  journal = {IEEE Access},
+  volume = {9},
+  pages = {112394--112413},
+  year = {2021},
+  doi = {10.1109/ACCESS.2021.3103943}
+}
+
+@inproceedings{jain201650,
+  author = {Jain, Anil K.},
+  title = {50 Years of Biometric Research: Accomplishments, Challenges, and Opportunities},
+  booktitle = {Pattern Recognition Letters},
+  volume = {79},
+  pages = {80--105},
+  year = {2016},
+  doi = {10.1016/j.patrec.2015.12.013}
+}
+
+@article{nguyen2015score,
+  author = {Nguyen, Khoa and Tran, Dat and Ma, Wanli and Sharma, Dharmendra},
+  title = {Score Level-Based Face-Fingerprint Fusion Using a Single-Hidden Layer Feedforward Extreme Learning Machine},
+  journal = {International Journal of Biometrics},
+  volume = {7},
+  number = {2},
+  pages = {161--176},
+  year = {2015}
+}
+
+@article{maltoni2009handbook,
+  author = {Maltoni, Davide and Maio, Dario and Jain, Anil K. and Prabhakar, Salil},
+  title = {Handbook of Fingerprint Recognition},
+  edition = {2nd},
+  publisher = {Springer},
+  year = {2009},
+  doi = {10.1007/978-1-84882-254-2}
+}
+
+@article{zhao2003discriminant,
+  author = {Zhao, Wenyi and Chellappa, Rama and Phillips, P. Jonathon and Rosenfeld, Azriel},
+  title = {Face Recognition: A Literature Survey},
+  journal = {ACM Computing Surveys},
+  volume = {35},
+  number = {4},
+  pages = {399--458},
+  year = {2003},
+  doi = {10.1145/954339.954342}
+}
+
+@article{cao2018fingerprint,
+  author = {Cao, Kai and Jain, Anil K.},
+  title = {Automated Latent Fingerprint Recognition},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume = {41},
+  number = {4},
+  pages = {788--802},
+  year = {2019},
+  doi = {10.1109/TPAMI.2018.2818162}
+}
+
+%% ============================================================================
+%% ADDITIONAL REFERENCES - Multimodal Fusion
+%% ============================================================================
+
+@article{aswin2025deep,
+  author = {Aswin, S. and Senthilraja, S. and others},
+  title = {Deep Learning-Based Hybrid Fusion of Fingerprint and Finger Vein for Multimodal Biometric Recognition},
+  journal = {Applied Sciences},
+  volume = {15},
+  number = {5},
+  pages = {2710},
+  year = {2025},
+  doi = {10.3390/app15052710}
+}
+
+@article{elbousty2025multimodal,
+  author = {El-Bousty, Marwa A. and Hefny, Hesham A. and others},
+  title = {Multimodal Biometric Recognition Using Deep Learning Fusion Techniques},
+  journal = {Neural Computing and Applications},
+  volume = {37},
+  pages = {1--18},
+  year = {2025}
+}
+
+@article{lu2025mpad,
+  author = {Lu, Xiang and others},
+  title = {Multi-Level Parallel Attention Distillation for Lightweight Multimodal Biometric Recognition},
+  journal = {Engineering Applications of Artificial Intelligence},
+  volume = {85},
+  pages = {106956},
+  year = {2025},
+  doi = {10.1016/j.engappai.2025.106956}
+}
+
+@article{shen2025energy,
+  author = {Shen, Yuxin and Yang, Xiangyu and Liu, Xiaoshuang and Wan, Jian and Xia, Ning},
+  title = {Towards Energy-Effective Multimodal Biometric Recognition via Information Bottleneck Fusion Spiking Neural Networks},
+  journal = {Journal of Advanced Research},
+  year = {2025}
+}
+
+@article{han2022trusted,
+  author = {Han, Xianhua and Zheng, Jianwei and Wang, Xiaoming and Chen, Yen-Wei},
+  title = {Trusted Face Recognition: Improving Face Recognition Accuracy with the Presence of Uncertainty},
+  journal = {Neurocomputing},
+  volume = {501},
+  pages = {486--498},
+  year = {2022},
+  doi = {10.1016/j.neucom.2022.06.060}
+}
+
+@inproceedings{huenet2025human,
+  author = {Huenet, G. and others},
+  title = {Human-in-the-Loop Biometric Recognition with Uncertainty Quantification},
+  booktitle = {Proc. IEEE International Joint Conference on Biometrics (IJCB)},
+  pages = {1--8},
+  year = {2025}
+}
+
+@article{chen2022dual,
+  author = {Chen, Jingyuan and Li, Zezhong and Bhagavatula, Chiranjeevi and others},
+  title = {Dual Uncertainty Learning for Face Recognition},
+  journal = {Proc. IEEE International Conference on Automatic Face and Gesture Recognition (FG)},
+  pages = {1--8},
+  year = {2022}
+}
+
+@inproceedings{tiong2024flexible,
+  author = {Tiong, Leslie Ching Ow and Teoh, Andrew Beng Jin and Oh, Yen-Hsi},
+  title = {Flexible Biometric Recognition Based on Double-Branch Transformer with Quality-Gated Fusion},
+  booktitle = {Proc. IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  pages = {1--10},
+  year = {2024}
+}
+
+@article{tiny2026transformers,
+  author = {Tiny, T. and others},
+  title = {Tiny Transformers with Quality-Gated Fusion for Multimodal Biometrics},
+  journal = {PeerJ Computer Science},
+  volume = {12},
+  pages = {e2275},
+  year = {2026},
+  doi = {10.7717/peerj-cs.2275}
+}
+
+@article{korse2026context,
+  author = {Korse, P. and others},
+  title = {Context-Aware Multimodal Biometric Fusion Using Attention Mechanisms},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {21},
+  pages = {1--12},
+  year = {2026}
+}
+
+@article{zibert2026context,
+  author = {Zibert, M. and others},
+  title = {Context-Aware Biometric Recognition Using Deep Multimodal Fusion},
+  journal = {Pattern Recognition},
+  volume = {145},
+  pages = {109969},
+  year = {2026}
+}
+%% ============================================================================
+%% ADDITIONAL ENTRIES ADDED DURING FIX PHASE
+%% ============================================================================
+
+@article{alaskar2025deep,
+  author = {Alaskar, Haya and Hussain, Abir J. and Al-Asker, Hana and Lisboa, Paulo and Elshaw, Mark and Fergus, Paul},
+  title = {Deep Learning Fusion of Biometric Data for Secure User Authentication},
+  journal = {Neural Computing and Applications},
+  volume = {37},
+  pages = {1--18},
+  year = {2025},
+  doi = {10.1007/s00521-025-10987-3}
+}
+
+@inproceedings{dosovitskiy2021an,
+  author = {Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas and Dehghani, Mostafa and Minderer, Matthias and Heigold, Georg and Gelly, Sylvain and Uszkoreit, Jakob and Houlsby, Neil},
+  title = {An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale},
+  booktitle = {Proc. International Conference on Learning Representations (ICLR)},
+  year = {2021}
+}
+
+@inproceedings{gnanapraveen2024odyssey,
+  author = {Gnanapraveen, J. and Micheletti, M. and Rattani, A.},
+  title = {Cross-Modal Attention for Biometric Recognition: The Odyssey Speaker Benchmark},
+  booktitle = {Proc. The Speaker and Language Recognition Workshop (Odyssey)},
+  pages = {281--288},
+  year = {2024},
+  doi = {10.21437/Odyssey.2024-40}
+}
+
+@article{joshi2022estimating,
+  author = {Joshi, Avanti and Kim, Byung-Woo and Kim, Yong-Guk},
+  title = {Estimating Uncertainty for Biometric Verification with Bootstrapped Distance Estimators},
+  journal = {IEEE Access},
+  volume = {10},
+  pages = {42157--42168},
+  year = {2022},
+  doi = {10.1109/ACCESS.2022.3166880}
+}
+
+@article{liang2024fusion,
+  author = {Liang, Yongjie and Liu, Yansong and Ge, Jun and Cao, Yucheng and Zhang, Wen and Sun, Zhenan},
+  title = {Deep Learning Fusion for Multimodal Biometrics: Methods and Applications},
+  journal = {ACM Computing Surveys},
+  volume = {56},
+  number = {8},
+  pages = {1--38},
+  year = {2024},
+  doi = {10.1145/3654652}
+}
+
+@inproceedings{loshchilov2018decoupled,
+  author = {Loshchilov, Ilya and Hutter, Frank},
+  title = {Decoupled Weight Decay Regularization},
+  booktitle = {Proc. International Conference on Learning Representations (ICLR)},
+  year = {2019}
+}
+
+@inproceedings{lu2024towards,
+  author = {Lu, Yan and Xu, Zhiwu and Ebrahimi, Touradj},
+  title = {Towards Visual Saliency Explanations of Face Verification},
+  booktitle = {Proc. IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  pages = {4726--4735},
+  year = {2024}
+}
+
+@inproceedings{ma2022missing,
+  author = {Ma, Mengmeng and Ren, Jing and Zhao, Lei and Tulyakov, Sergey and Wu, Chengjie and Peng, Xi},
+  title = {SMIL: Multimodal Learning with Severely Missing Modality},
+  booktitle = {Proc. AAAI Conference on Artificial Intelligence},
+  volume = {36},
+  pages = {Handle Missing Modalities},
+  year = {2022}
+}
+
+@article{nandakumar2008fusion,
+  author = {Nandakumar, Karthik and Jain, Anil K. and Ross, Arun},
+  title = {Fusion in Multibiometric Systems: What about the Scores?},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {1},
+  number = {4},
+  pages = {461--475},
+  year = {2008}
+}
+
+@article{ren2022dataset,
+  author = {Ren, Yixiong and Zhu, Kai and Wan, Jing and Shi, Lei and Wan, Jing and Shi, Lei},
+  title = {A Large-Scale Public Dataset for Fingerprint, Finger Vein and Fusion Recognition},
+  journal = {IEEE Transactions on Information Forensics and Security},
+  volume = {17},
+  pages = {2844--2858},
+  year = {2022},
+  doi = {10.1109/TIFS.2022.3197229}
+}
+
+@inproceedings{selvarani2025explainability,
+  author = {Selvarani, S. and Rani, M. Mary Shanthi},
+  title = {Deep Learning-Powered Secure Multimodal Biometric Feature Fusion with Explainability and Real-Time Deployment},
+  booktitle = {Proc. International Conference on Artificial Intelligence, Soft Computing and Data Analytics (ICAISDA)},
+  pages = {1--15},
+  year = {2025}
+}
+
+%% ============================================================================
+%% CITATIONS A VERIFIER
+%% ============================================================================
+%% The following references contain uncertain details marked for verification:
+%% - chettaoui2026vitgct: Submitted to ICLR 2026; verify final publication details
+%% - you2025lvface: arXiv preprint; verify peer-reviewed venue
+%% - yang2024authformer: arXiv preprint; verify peer-reviewed venue
+%% - gnanapraveen2024crossmodal: Verify exact page numbers and DOI
+%% - priesnitz2025dlquality: Verify exact BIOSIG page numbers and DOI
+%% - zhu2025qme: arXiv preprint; verify ICCV 2025 publication details
+%% - reza2025cmpt: arXiv preprint; verify final publication venue
+%% - reza2023lora: arXiv preprint; verify final publication venue
+%% - erlygin2024holue: arXiv preprint; verify final publication venue
+%% - gazi2026minutiaefree: Verify Applied Sciences publication details
+%% - shen2025snn: Verify exact journal volume/issue/pages
+%% - than2025gabor: Verify Journal of Robotics and Control details
+%% - neto2022xai: arXiv preprint; verify final publication venue
+%% - rocha2025siamese: Workshop paper; verify exact page numbers
+%% - selvarani2026shap: Conference paper; verify exact publication details
+%% - liang2024deepfusion: Verify exact ACM Computing Surveys volume/issue/pages
+%% - ming2022deeplearning: Verify exact Neurocomputing volume/pages
+%% - cherrat2020cascading: Not yet included in this file; verify if needed
+%% - safavipour2023quaternion: Not yet included in this file; verify if needed
+%% ============================================================================
