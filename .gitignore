@@ -2,6 +2,9 @@
 data
 PlamMatchDB.zip
 article*.md
+output
+results
+latex
 croissant
 dataset-metadata.json
 *.png
