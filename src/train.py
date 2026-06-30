@@ -63,7 +63,6 @@ from data_loader import (
     DatasetConfig,
     MissingModalitySimulator,
     get_dataloaders,
-    get_dataloaders_separate,
     set_seed as dl_set_seed,
 )
 
@@ -247,8 +246,6 @@ class TrainConfig:
 
     # Data ------------------------------------------------------------------
     dataset_path: str = "/data/biometric"
-    face_path: str = ""
-    fingerprint_path: str = ""
     output_dir: str = "./checkpoints"
     batch_size: int = 64
     num_workers: int = 4
@@ -296,14 +293,10 @@ class TrainConfig:
     # Model -----------------------------------------------------------------
     embedding_dim: int = 512
     num_subjects: Optional[int] = None
-    num_face_subjects: Optional[int] = None
-    num_fp_subjects: Optional[int] = None
 
     # Performance -----------------------------------------------------------
     use_amp: bool = True
     """Enable Automatic Mixed Precision (AMP) training for ~2-3x speedup on T4/V100."""
-    synthetic_samples_per_epoch: Optional[int] = 50_000
-    """Cap on Phase-2 SyntheticPairDataset size per epoch.  None = use full dataset."""
     mc_samples_train: int = 1
     """Number of MC-Dropout samples during training (use 1 for speed; full at inference)."""
     num_workers: int = 4
@@ -1906,542 +1899,6 @@ def train_phase2_joint(
 
 
 # ---------------------------------------------------------------------------
-# Phase 1 (Separate Datasets): Unimodal Pre-training with two loaders
-# ---------------------------------------------------------------------------
-
-def train_phase1_unimodal_separate(
-    model: nn.Module,
-    face_loader: DataLoader,
-    fp_loader: DataLoader,
-    config: TrainConfig,
-    device: torch.device,
-    output_dir: Path,
-    start_epoch: int = 1,
-    resume_checkpoint: Optional[Union[str, Path]] = None,
-) -> nn.Module:
-    """Phase 1 for separate datasets: Unimodal encoder pre-training.
-
-    Uses two independent dataloaders — one for faces (CASIA-WebFace) and
-    one for fingerprints (SOCOFing).  Each encoder is trained with its own
-    ArcFace classification head.  The fusion transformer and uncertainty
-    head are frozen.
-
-    Within each epoch, the function iterates over both loaders
-    simultaneously (using ``zip``), so each optimizer step processes one
-    face batch and one fingerprint batch.
-
-    Args:
-        model: The UFM-Transformer model.
-        face_loader: DataLoader yielding ``(face_tensor, subject_id, quality)``.
-        fp_loader: DataLoader yielding ``(fingerprint_tensor, subject_id, quality)``.
-        config: Training configuration.
-        device: Compute device.
-        output_dir: Directory to save checkpoints.
-
-    Returns:
-        The model with pre-trained encoders.
-    """
-    logger.info("=" * 70)
-    logger.info("PHASE 1 (SEPARATE): Unimodal Encoder Pre-training")
-    logger.info(f"  Face subjects: {config.num_face_subjects or '?'}")
-    logger.info(f"  Fingerprint subjects: {config.num_fp_subjects or '?'}")
-    logger.info("=" * 70)
-
-    # Unwrap DDP / DataParallel for direct submodule access during unimodal training
-    _model = _unwrap_model(model)
-
-    # Freeze fusion components
-    fusion_params = []
-    encoder_params = []
-
-    for name, param in model.named_parameters():
-        if "fusion" in name or "uncertainty" in name or "cross_modal" in name:
-            param.requires_grad = False
-            fusion_params.append(name)
-        else:
-            param.requires_grad = True
-            encoder_params.append(name)
-
-    logger.info(f"Frozen parameters ({len(fusion_params)}): {fusion_params[:5]}...")
-    logger.info(f"Trainable parameters ({len(encoder_params)}): {encoder_params[:5]}...")
-
-    # Setup optimizer (only trainable params)
-    optimizer = AdamW(
-        filter(lambda p: p.requires_grad, model.parameters()),
-        lr=config.lr_phase1,
-        weight_decay=config.weight_decay,
-    )
-
-    scheduler = CosineAnnealingLR(
-        optimizer,
-        T_max=config.epochs_phase1,
-        eta_min=config.lr_min,
-    )
-
-    if resume_checkpoint is not None:
-        load_checkpoint(resume_checkpoint, model, optimizer=optimizer, scheduler=scheduler, device=device)
-        logger.info("Phase 1 separate optimizer/scheduler state restored from checkpoint.")
-
-    # ArcFace criteria — one per modality with its own class count
-    num_face_cls = config.num_face_subjects or config.num_subjects or 100
-    num_fp_cls = config.num_fp_subjects or config.num_subjects or 100
-
-    face_criterion = UnimodalArcFaceLoss(
-        embedding_dim=config.embedding_dim,
-        num_classes=num_face_cls,
-        arcface_margin=config.arcface_margin,
-        arcface_scale=config.arcface_scale,
-    ).to(device)
-
-    fp_criterion = UnimodalArcFaceLoss(
-        embedding_dim=config.embedding_dim,
-        num_classes=num_fp_cls,
-        arcface_margin=config.arcface_margin,
-        arcface_scale=config.arcface_scale,
-    ).to(device)
-
-    # NOTE: We intentionally do NOT wrap individual submodules with DataParallel
-    # here because timm EfficientNet backbones trigger CUDA "misaligned address"
-    # errors when DataParallel.scatter splits batches across GPUs.
-    # The top-level model is still wrapped in DataParallel (build_model) which
-    # benefits Phase 2 joint training and combined-dataset mode.
-
-    best_val_eer = float("inf")
-    history: List[Dict[str, Any]] = []
-    start_epoch = max(1, int(start_epoch))
-    logger.info("Phase 1 separate starts at epoch %d", start_epoch)
-
-    for epoch in range(start_epoch, config.epochs_phase1 + 1):
-        epoch_start = time.time()
-        model.train()
-
-        # Shuffle differently each epoch with DistributedSampler
-        for loader in (face_loader, fp_loader):
-            if hasattr(loader, "sampler") and hasattr(loader.sampler, "set_epoch"):
-                loader.sampler.set_epoch(epoch)
-
-        # Keep fusion frozen
-        for name, param in model.named_parameters():
-            if "fusion" in name or "uncertainty" in name or "cross_modal" in name:
-                param.requires_grad = False
-
-        epoch_losses: Dict[str, List[float]] = defaultdict(list)
-        face_correct = 0
-        face_total = 0
-        fp_correct = 0
-        fp_total = 0
-
-        # Zip both loaders; if one is shorter, we stop at the shorter one
-        n_batches = min(len(face_loader), len(fp_loader))
-        pbar = tqdm(
-            zip(face_loader, fp_loader),
-            total=n_batches,
-            desc=f"Phase1-Sep Epoch {epoch}/{config.epochs_phase1}",
-            leave=False,
-            dynamic_ncols=True,
-        )
-
-        for (face, face_labels, face_q), (fp_img, fp_labels, fp_q) in pbar:
-            face = face.to(device, non_blocking=True)
-            face_labels = face_labels.to(device, non_blocking=True)
-            face_q = face_q.to(device, non_blocking=True)
-            fp_img = fp_img.to(device, non_blocking=True)
-            if fp_img.size(1) != 1:
-                fp_img = fp_img.mean(dim=1, keepdim=True)
-            fp_labels = fp_labels.to(device, non_blocking=True)
-            fp_q = fp_q.to(device, non_blocking=True)
-
-            # --- Face forward pass ---
-            # Extract face features through the encoder + projector
-            face_feat_map, face_global = _model.face_encoder(face)
-            z_face = _model.face_projector(face_global)
-
-            loss_face, face_dict = face_criterion(z_face, face_labels)
-
-            # --- Fingerprint forward pass ---
-            fp_feat_map, fp_global = _model.fp_encoder(fp_img)
-            z_fp = _model.fp_projector(fp_global)
-
-            loss_fp, fp_dict = fp_criterion(z_fp, fp_labels)
-
-            # Combined loss
-            loss = loss_face + loss_fp
-
-            optimizer.zero_grad()
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(
-                filter(lambda p: p.requires_grad, model.parameters()),
-                config.max_grad_norm,
-            )
-            optimizer.step()
-
-            # Metrics
-            epoch_losses["total"].append(loss.item())
-            epoch_losses["face_arcface"].append(face_dict["arcface"].item())
-            epoch_losses["fp_arcface"].append(fp_dict["arcface"].item())
-
-            face_preds = face_criterion.arcface(
-                F.normalize(z_face, p=2, dim=1), face_labels
-            ).argmax(dim=1)
-            face_correct += (face_preds == face_labels).sum().item()
-            face_total += face_labels.size(0)
-
-            fp_preds = fp_criterion.arcface(
-                F.normalize(z_fp, p=2, dim=1), fp_labels
-            ).argmax(dim=1)
-            fp_correct += (fp_preds == fp_labels).sum().item()
-            fp_total += fp_labels.size(0)
-
-            pbar.set_postfix({
-                "loss": f"{loss.item():.4f}",
-                "face_acc": f"{face_correct / max(face_total, 1):.4f}",
-                "fp_acc": f"{fp_correct / max(fp_total, 1):.4f}",
-                "lr": f"{optimizer.param_groups[0]['lr']:.2e}",
-            })
-
-        scheduler.step()
-
-        epoch_time = time.time() - epoch_start
-        metrics = {
-            "epoch": epoch,
-            "phase": 1,
-            "train_loss": float(np.mean(epoch_losses["total"])),
-            "face_accuracy": face_correct / max(face_total, 1),
-            "fp_accuracy": fp_correct / max(fp_total, 1),
-            "epoch_time": epoch_time,
-        }
-        history.append(metrics)
-
-        if config.save_logs and _is_main_process():
-            save_history(history, output_dir / "history.json")
-
-        logger.info(
-            f"Phase1-Sep Epoch {epoch:3d}/{config.epochs_phase1} | "
-            f"Train Loss: {metrics['train_loss']:.4f} | "
-            f"Face Acc: {metrics['face_accuracy']:.4f} | "
-            f"FP Acc: {metrics['fp_accuracy']:.4f} | "
-            f"Time: {epoch_time:.1f}s"
-        )
-
-        # Save best model (lowest train loss as proxy; no shared val set)
-        if metrics["train_loss"] < best_val_eer:
-            best_val_eer = metrics["train_loss"]
-            save_checkpoint(
-                model=model,
-                optimizer=optimizer,
-                scheduler=scheduler,
-                epoch=epoch,
-                metrics=metrics,
-                config=config,
-                path=output_dir / "best_model_phase1.pt",
-                phase=1,
-            )
-            logger.info(f"  -> Saved best Phase 1 model (loss: {best_val_eer:.4f})")
-
-        if epoch % config.checkpoint_every == 0:
-            save_checkpoint(
-                model=model,
-                optimizer=optimizer,
-                scheduler=scheduler,
-                epoch=epoch,
-                metrics=metrics,
-                config=config,
-                path=output_dir / f"checkpoint_phase1_epoch{epoch:03d}.pt",
-                phase=1,
-            )
-
-        if is_shutdown_requested():
-            save_checkpoint(
-                model=model,
-                optimizer=optimizer,
-                scheduler=scheduler,
-                epoch=epoch,
-                metrics=metrics,
-                config=config,
-                path=output_dir / "shutdown_checkpoint_phase1.pt",
-                phase=1,
-            )
-            if config.save_logs:
-                save_history(history, output_dir / "history.json")
-            logger.info(f"Phase 1 (separate) stopped early at epoch {epoch}/{config.epochs_phase1} "
-                        f"(graceful shutdown). Best train loss: {best_val_eer:.4f}")
-            return model
-
-    if config.save_logs:
-        save_history(history, output_dir / "history.json")
-
-    logger.info(f"Phase 1 (separate) complete. Best train loss: {best_val_eer:.4f}")
-    return model
-
-
-# ---------------------------------------------------------------------------
-# Phase 2 (Separate Datasets): Joint Fine-tuning with Synthetic Pairs
-# ---------------------------------------------------------------------------
-
-def train_phase2_joint_separate(
-    model: nn.Module,
-    pair_loader: DataLoader,
-    config: TrainConfig,
-    device: torch.device,
-    output_dir: Path,
-    start_epoch: int = 1,
-    resume_checkpoint: Optional[Union[str, Path]] = None,
-) -> nn.Module:
-    """Phase 2 for separate datasets: Joint fine-tuning with synthetic pairs.
-
-    Uses a ``SyntheticPairDataset`` that randomly pairs a face from
-    CASIA-WebFace with a fingerprint from SOCOFing.  Since the two corpora
-    have no shared identities, every pair is cross-subject.  The fusion
-    transformer learns to produce a unified embedding despite the modality
-    gap.
-
-    All model parameters are unfrozen.  Random modality dropout (30%) is
-    applied.  The full ``UFMLoss`` (triplet + ArcFace + uncertainty) is
-    used with cosine annealing LR scheduling.
-
-    Args:
-        model: The UFM-Transformer model (with pre-trained encoders).
-        pair_loader: DataLoader yielding
-            ``(face, fingerprint, face_sid, fp_sid, face_quality, fp_quality)``.
-        config: Training configuration.
-        device: Compute device.
-        output_dir: Directory to save checkpoints.
-
-    Returns:
-        The fine-tuned model.
-    """
-    logger.info("=" * 70)
-    logger.info("PHASE 2 (SEPARATE): Joint Fine-tuning with Synthetic Pairs")
-    logger.info("=" * 70)
-
-    # DDP (launched via torchrun) avoids the CUDA misaligned address bug
-    # that DataParallel triggers with timm EfficientNet backbones.
-    # When DDP is active, the model stays wrapped & uses all GPUs safely.
-
-    # Unfreeze ALL parameters
-    for param in model.parameters():
-        param.requires_grad = True
-
-    trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    total = sum(p.numel() for p in model.parameters())
-    logger.info(f"Trainable parameters: {trainable:,} / {total:,}")
-
-    optimizer = AdamW(
-        model.parameters(),
-        lr=config.lr_phase2,
-        weight_decay=config.weight_decay,
-    )
-
-    scheduler = CosineAnnealingLR(
-        optimizer,
-        T_max=config.epochs_phase2,
-        eta_min=config.lr_min,
-    )
-
-    if resume_checkpoint is not None:
-        load_checkpoint(resume_checkpoint, model, optimizer=optimizer, scheduler=scheduler, device=device)
-        logger.info("Phase 2 separate optimizer/scheduler state restored from checkpoint.")
-
-    # Use a shared num_classes for UFMLoss (max of both)
-    num_cls = max(
-        config.num_face_subjects or 100,
-        config.num_fp_subjects or 100,
-    )
-    criterion = UFMLoss(
-        embedding_dim=config.embedding_dim,
-        num_classes=num_cls,
-        w_triplet=config.w_triplet,
-        w_arcface=config.w_arcface,
-        w_uncertainty=config.w_uncertainty,
-        triplet_margin=config.triplet_margin,
-        arcface_margin=config.arcface_margin,
-        arcface_scale=config.arcface_scale,
-    ).to(device)
-
-    best_val_eer = float("inf")
-    history_path = output_dir / "history.json"
-    history: List[Dict[str, Any]] = json.loads(history_path.read_text()) if history_path.exists() else []
-    start_epoch = max(1, int(start_epoch))
-    logger.info("Phase 2 separate starts at epoch %d", start_epoch)
-
-    # AMP GradScaler (no-op when AMP is disabled or device is CPU)
-    amp_enabled = config.use_amp and device.type == "cuda"
-    scaler = GradScaler() if amp_enabled else None
-    if amp_enabled:
-        logger.info("AMP (Automatic Mixed Precision) ENABLED for Phase 2 separate.")
-
-    for epoch in range(start_epoch, config.epochs_phase2 + 1):
-        epoch_start = time.time()
-        model.train()
-
-        # Shuffle differently each epoch with DistributedSampler
-        if hasattr(pair_loader, "sampler") and hasattr(pair_loader.sampler, "set_epoch"):
-            pair_loader.sampler.set_epoch(epoch)
-
-        epoch_losses: Dict[str, List[float]] = defaultdict(list)
-        all_embeddings: List[torch.Tensor] = []
-        all_labels_list: List[torch.Tensor] = []
-
-        pbar = tqdm(
-            pair_loader,
-            desc=f"Phase2-Sep Epoch {epoch}/{config.epochs_phase2}",
-            leave=False,
-            dynamic_ncols=True,
-        )
-
-        for face, fingerprint, face_sid, fp_sid, face_q, fp_q in pbar:
-            face = face.to(device, non_blocking=True)
-            fingerprint = fingerprint.to(device, non_blocking=True)
-            face_sid = face_sid.to(device, non_blocking=True)
-            fp_sid = fp_sid.to(device, non_blocking=True)
-            face_q = face_q.to(device, non_blocking=True)
-            fp_q = fp_q.to(device, non_blocking=True)
-
-            # Use face_sid as the primary label for UFMLoss
-            labels = face_sid
-
-            # Apply modality masking
-            face_missing = torch.zeros(face.size(0), dtype=torch.bool, device=device)
-            fp_missing = torch.zeros(face.size(0), dtype=torch.bool, device=device)
-
-            if config.modality_dropout_prob > 0:
-                (
-                    face,
-                    fingerprint,
-                    face_q,
-                    fp_q,
-                    face_missing,
-                    fp_missing,
-                ) = apply_modality_masking(
-                    face, fingerprint, face_q, fp_q,
-                    dropout_prob=config.modality_dropout_prob,
-                )
-
-            # Full forward pass + loss under AMP autocast
-            optimizer.zero_grad()
-            with autocast(enabled=amp_enabled):
-                outputs = _run_model_forward(
-                    model=model,
-                    face=face,
-                    fingerprint=fingerprint,
-                    face_quality=face_q,
-                    fp_quality=fp_q,
-                    face_missing=face_missing,
-                    fp_missing=fp_missing,
-                )
-                # Build the dict expected by UFMLoss
-                loss_inputs = _outputs_for_ufm_loss(outputs)
-                loss, loss_dict = criterion(loss_inputs, labels)
-
-            # Backward pass (scaled when AMP is active)
-            if scaler is not None:
-                scaler.scale(loss).backward()
-                scaler.unscale_(optimizer)
-                torch.nn.utils.clip_grad_norm_(model.parameters(), config.max_grad_norm)
-                scaler.step(optimizer)
-                scaler.update()
-            else:
-                loss.backward()
-                torch.nn.utils.clip_grad_norm_(model.parameters(), config.max_grad_norm)
-                optimizer.step()
-
-            epoch_losses["loss"].append(loss.item())
-            for key, value in loss_dict.items():
-                epoch_losses[key].append(value.item())
-
-            if "fused_face" in outputs:
-                all_embeddings.append(outputs["fused_face"].detach().cpu())
-                all_labels_list.append(labels.detach().cpu())
-
-            current_lr = optimizer.param_groups[0]["lr"]
-            postfix = {
-                "loss": f"{loss.item():.4f}",
-                "lr": f"{current_lr:.2e}",
-            }
-            if "triplet" in loss_dict:
-                postfix["triplet"] = f"{loss_dict['triplet'].item():.4f}"
-            if "arcface" in loss_dict:
-                postfix["arcface"] = f"{loss_dict['arcface'].item():.4f}"
-            pbar.set_postfix(postfix)
-
-        scheduler.step()
-
-        epoch_time = time.time() - epoch_start
-        metrics = {
-            "epoch": epoch,
-            "phase": 2,
-            "train_loss": float(np.mean(epoch_losses["loss"])),
-            "epoch_time": epoch_time,
-        }
-        for key in ["triplet", "arcface", "uncertainty"]:
-            if key in epoch_losses and len(epoch_losses[key]) > 0:
-                metrics[f"{key}_loss"] = float(np.mean(epoch_losses[key]))
-
-        history.append(metrics)
-
-        if config.save_logs and _is_main_process():
-            save_history(history, history_path)
-
-        logger.info(
-            f"Phase2-Sep Epoch {epoch:3d}/{config.epochs_phase2} | "
-            f"Train Loss: {metrics['train_loss']:.4f} | "
-            f"Triplet: {metrics.get('triplet_loss', 0):.4f} | "
-            f"ArcFace: {metrics.get('arcface_loss', 0):.4f} | "
-            f"LR: {current_lr:.2e} | "
-            f"Time: {epoch_time:.1f}s"
-        )
-
-        if metrics["train_loss"] < best_val_eer:
-            best_val_eer = metrics["train_loss"]
-            save_checkpoint(
-                model=model,
-                optimizer=optimizer,
-                scheduler=scheduler,
-                epoch=epoch,
-                metrics=metrics,
-                config=config,
-                path=output_dir / "best_model_phase2.pt",
-                phase=2,
-            )
-            logger.info(f"  -> Saved best Phase 2 model (loss: {best_val_eer:.4f})")
-
-        if epoch % config.checkpoint_every == 0:
-            save_checkpoint(
-                model=model,
-                optimizer=optimizer,
-                scheduler=scheduler,
-                epoch=epoch,
-                metrics=metrics,
-                config=config,
-                path=output_dir / f"checkpoint_phase2_epoch{epoch:03d}.pt",
-                phase=2,
-            )
-
-        if is_shutdown_requested():
-            save_checkpoint(
-                model=model,
-                optimizer=optimizer,
-                scheduler=scheduler,
-                epoch=epoch,
-                metrics=metrics,
-                config=config,
-                path=output_dir / "shutdown_checkpoint_phase2.pt",
-                phase=2,
-            )
-            if config.save_logs:
-                save_history(history, history_path)
-            logger.info(f"Phase 2 (separate) stopped early at epoch {epoch}/{config.epochs_phase2} "
-                        f"(graceful shutdown). Best train loss: {best_val_eer:.4f}")
-            return model
-
-    if config.save_logs:
-        save_history(history, history_path)
-
-    logger.info(f"Phase 2 (separate) complete. Best train loss: {best_val_eer:.4f}")
-    return model
-
-
-# ---------------------------------------------------------------------------
 # Checkpointing
 # ---------------------------------------------------------------------------
 
@@ -2668,63 +2125,31 @@ def main(config: Optional[TrainConfig] = None) -> nn.Module:
     # ------------------------------------------------------------------
     logger.info("Loading datasets...")
 
-    use_separate = bool(config.face_path and config.fingerprint_path)
+    logger.info("Using paired dataset from: %s", config.dataset_path)
+    loaders = get_dataloaders(
+        root_dir=config.dataset_path,
+        batch_size=config.batch_size,
+        num_workers=config.num_workers,
+        image_size=config.image_size,
+        seed=config.seed,
+        pin_memory=config.pin_memory,
+    )
 
-    if use_separate:
-        logger.info("Using SEPARATE datasets: CASIA-WebFace + SOCOFing")
-        logger.info("  Face path: %s", config.face_path)
-        logger.info("  Fingerprint path: %s", config.fingerprint_path)
+    train_loader = loaders["train"]
+    val_loader = loaders["val"]
+    test_loader = loaders["test"]
 
-        loaders = get_dataloaders_separate(
-            face_path=config.face_path,
-            fingerprint_path=config.fingerprint_path,
-            batch_size=config.batch_size,
-            num_workers=config.num_workers,
-            image_size=config.image_size,
-            seed=config.seed,
-            pin_memory=config.pin_memory,
-            distributed=_is_distributed(),
-            synthetic_samples_per_epoch=config.synthetic_samples_per_epoch,
-        )
+    logger.info("Train batches: %d", len(train_loader))
+    logger.info("Val batches: %d", len(val_loader))
+    logger.info("Test batches: %d", len(test_loader))
 
-        face_loader = loaders["face_loader"]
-        fp_loader = loaders["fp_loader"]
-        pair_loader = loaders["pair_loader"]
-
-        config.num_face_subjects = loaders["num_face_subjects"]
-        config.num_fp_subjects = loaders["num_fp_subjects"]
-
-        logger.info("Face samples: %d | Face subjects: %d",
-                     len(loaders["face_dataset"]), config.num_face_subjects)
-        logger.info("Fingerprint samples: %d | Fingerprint subjects: %d",
-                     len(loaders["fp_dataset"]), config.num_fp_subjects)
-        logger.info("Synthetic pairs per epoch: %d", len(loaders["pair_dataset"]))
-    else:
-        logger.info("Using paired dataset from: %s", config.dataset_path)
-        loaders = get_dataloaders(
-            root_dir=config.dataset_path,
-            batch_size=config.batch_size,
-            num_workers=config.num_workers,
-            image_size=config.image_size,
-            seed=config.seed,
-            pin_memory=config.pin_memory,
-        )
-
-        train_loader = loaders["train"]
-        val_loader = loaders["val"]
-        test_loader = loaders["test"]
-
-        logger.info("Train batches: %d", len(train_loader))
-        logger.info("Val batches: %d", len(val_loader))
-        logger.info("Test batches: %d", len(test_loader))
-
-        # Infer num_subjects if not specified
-        if config.num_subjects is None:
-            try:
-                config.num_subjects = loaders["datasets"]["train"].get_num_subjects()
-            except AttributeError:
-                config.num_subjects = len(loaders["train_subjects"])
-            logger.info("Inferred num_subjects: %s", config.num_subjects)
+    # Infer num_subjects if not specified
+    if config.num_subjects is None:
+        try:
+            config.num_subjects = loaders["datasets"]["train"].get_num_subjects()
+        except AttributeError:
+            config.num_subjects = len(loaders["train_subjects"])
+        logger.info("Inferred num_subjects: %s", config.num_subjects)
 
     # ------------------------------------------------------------------
     # 3. Model construction
@@ -2751,28 +2176,16 @@ def main(config: Optional[TrainConfig] = None) -> nn.Module:
     # 4. Phase 1: Unimodal pre-training
     # ------------------------------------------------------------------
     if start_phase <= 1:
-        if use_separate:
-            model = train_phase1_unimodal_separate(
-                model=model,
-                face_loader=face_loader,
-                fp_loader=fp_loader,
-                config=config,
-                device=device,
-                output_dir=output_dir,
-                start_epoch=start_epoch if start_phase == 1 else 1,
-                resume_checkpoint=config.resume_from if start_phase == 1 else None,
-            )
-        else:
-            model = train_phase1_unimodal(
-                model=model,
-                train_loader=train_loader,
-                val_loader=val_loader,
-                config=config,
-                device=device,
-                output_dir=output_dir,
-                start_epoch=start_epoch if start_phase == 1 else 1,
-                resume_checkpoint=config.resume_from if start_phase == 1 else None,
-            )
+        model = train_phase1_unimodal(
+            model=model,
+            train_loader=train_loader,
+            val_loader=val_loader,
+            config=config,
+            device=device,
+            output_dir=output_dir,
+            start_epoch=start_epoch if start_phase == 1 else 1,
+            resume_checkpoint=config.resume_from if start_phase == 1 else None,
+        )
 
         # Load best Phase 1 checkpoint for Phase 2
         best_phase1_path = output_dir / "best_model_phase1.pt"
@@ -2791,27 +2204,16 @@ def main(config: Optional[TrainConfig] = None) -> nn.Module:
     # 5. Phase 2: Joint fine-tuning
     # ------------------------------------------------------------------
     if start_phase <= 2:
-        if use_separate:
-            model = train_phase2_joint_separate(
-                model=model,
-                pair_loader=pair_loader,
-                config=config,
-                device=device,
-                output_dir=output_dir,
-                start_epoch=start_epoch if start_phase == 2 else 1,
-                resume_checkpoint=config.resume_from if start_phase == 2 else None,
-            )
-        else:
-            model = train_phase2_joint(
-                model=model,
-                train_loader=train_loader,
-                val_loader=val_loader,
-                config=config,
-                device=device,
-                output_dir=output_dir,
-                start_epoch=start_epoch if start_phase == 2 else 1,
-                resume_checkpoint=config.resume_from if start_phase == 2 else None,
-            )
+        model = train_phase2_joint(
+            model=model,
+            train_loader=train_loader,
+            val_loader=val_loader,
+            config=config,
+            device=device,
+            output_dir=output_dir,
+            start_epoch=start_epoch if start_phase == 2 else 1,
+            resume_checkpoint=config.resume_from if start_phase == 2 else None,
+        )
     else:
         logger.info("Skipping Phase 2 (already complete)")
 
@@ -2827,14 +2229,10 @@ def main(config: Optional[TrainConfig] = None) -> nn.Module:
     if best_phase2_path.exists():
         load_checkpoint(best_phase2_path, model, device=device)
 
-    if use_separate:
-        logger.info("Skipping test-set evaluation (no shared test set for separate datasets).")
-        test_metrics = {"eer": 0.0, "note": "no shared test set"}
-    else:
-        test_metrics = validate(model, test_loader, device)
-        logger.info("Test Set Metrics:")
-        for key, value in test_metrics.items():
-            logger.info("  %-20s: %.4f", key, value)
+    test_metrics = validate(model, test_loader, device)
+    logger.info("Test Set Metrics:")
+    for key, value in test_metrics.items():
+        logger.info("  %-20s: %.4f", key, value)
 
     # Save test metrics
     if config.save_logs and _is_main_process():
@@ -2883,18 +2281,6 @@ def parse_args() -> TrainConfig:
         type=str,
         default="/data/biometric",
         help="Root directory containing subject sub-folders with face and fingerprint images.",
-    )
-    parser.add_argument(
-        "--face_path",
-        type=str,
-        default="",
-        help="Path to face dataset (CASIA-WebFace extracted). Overrides dataset_path for faces.",
-    )
-    parser.add_argument(
-        "--fingerprint_path",
-        type=str,
-        default="",
-        help="Path to fingerprint dataset (SOCOFing/Real). Overrides dataset_path for fingerprints.",
     )
     parser.add_argument(
         "--output_dir",
@@ -3071,8 +2457,6 @@ def parse_args() -> TrainConfig:
     # Convert argparse Namespace to TrainConfig
     config = TrainConfig(
         dataset_path=args.dataset_path,
-        face_path=args.face_path,
-        fingerprint_path=args.fingerprint_path,
         output_dir=args.output_dir,
         batch_size=args.batch_size,
         num_workers=args.num_workers,

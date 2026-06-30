@@ -119,20 +119,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
         help="Root directory containing the face and fingerprint datasets.",
     )
     parser.add_argument(
-        "--face_path",
-        type=str,
-        default=None,
-        help="Path to face dataset (CASIA-WebFace extracted). "
-             "When used with --fingerprint_path, enables separate-dataset mode.",
-    )
-    parser.add_argument(
-        "--fingerprint_path",
-        type=str,
-        default=None,
-        help="Path to fingerprint dataset (SOCOFing/Real). "
-             "When used with --face_path, enables separate-dataset mode.",
-    )
-    parser.add_argument(
         "--output_dir",
         type=str,
         default="./output",
@@ -275,14 +261,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
         help="Disable AMP (fall back to FP32).",
     )
     perf_group.add_argument(
-        "--synthetic_samples",
-        type=int,
-        default=50_000,
-        dest="synthetic_samples_per_epoch",
-        help="Max synthetic pairs per Phase-2 epoch (default: 50000). "
-             "Use 0 or a negative value to use the full dataset.",
-    )
-    perf_group.add_argument(
         "--mc_samples_train",
         type=int,
         default=1,
@@ -316,37 +294,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
     )
 
     return parser
-
-
-# ---------------------------------------------------------------------------
-# DDP training entry point (must be module-level for mp.spawn pickling)
-# ---------------------------------------------------------------------------
-
-def _ddp_training_entry(rank: int, gpu_count: int, master_addr: str, master_port: int, config_dict: Dict[str, Any]) -> None:
-    """Entry point for each DDP worker process launched via mp.spawn.
-
-    Sets the environment variables that ``_setup_ddp()`` in ``train.py``
-    expects, then delegates to ``train_main``.
-    """
-    import signal as _signal
-
-    def _ddp_signal_handler(signum, frame):
-        from train import request_shutdown
-        request_shutdown()
-
-    _signal.signal(_signal.SIGTERM, _ddp_signal_handler)
-    _signal.signal(_signal.SIGINT, _ddp_signal_handler)
-
-    os.environ["MASTER_ADDR"] = master_addr
-    os.environ["MASTER_PORT"] = str(master_port)
-    os.environ["LOCAL_RANK"] = str(rank)
-    os.environ["RANK"] = str(rank)
-    os.environ["WORLD_SIZE"] = str(gpu_count)
-
-    from train import TrainConfig, main as train_main
-
-    config = TrainConfig(**config_dict)
-    train_main(config)
 
 
 # ---------------------------------------------------------------------------
@@ -388,69 +335,6 @@ def run_training(args: argparse.Namespace) -> None:
         _timeout_timer = threading.Timer(args.timeout, _on_timeout)
         _timeout_timer.daemon = True
         _timeout_timer.start()
-
-    # If separate face/fingerprint paths are provided, delegate to train.py
-    if args.face_path and args.fingerprint_path:
-        logging.info("Separate datasets detected - delegating to train.py pipeline.")
-        logging.info("  Face path: %s", args.face_path)
-        logging.info("  Fingerprint path: %s", args.fingerprint_path)
-
-        from train import TrainConfig, main as train_main
-
-        config = TrainConfig(
-            dataset_path=args.dataset_path,
-            face_path=args.face_path,
-            fingerprint_path=args.fingerprint_path,
-            output_dir=str(output_dir),
-            batch_size=args.batch_size,
-            num_workers=args.num_workers,
-            image_size=args.image_size,
-            epochs_phase1=args.epochs,
-            epochs_phase2=args.epochs,
-            lr_phase1=args.lr,
-            lr_phase2=args.lr * 0.1,
-            weight_decay=args.weight_decay,
-            seed=args.seed,
-            device=args.device,
-            checkpoint_every=getattr(args, "checkpoint_every", args.save_every),
-            resume_from=args.resume,
-            embedding_dim=args.embed_dim,
-            # Performance optimisations
-            use_amp=args.use_amp,
-            synthetic_samples_per_epoch=(
-                args.synthetic_samples_per_epoch
-                if args.synthetic_samples_per_epoch > 0
-                else None
-            ),
-            mc_samples_train=args.mc_samples_train,
-        )
-
-        gpu_count = torch.cuda.device_count() if torch.cuda.is_available() else 0
-        if gpu_count > 1 and args.device != "cpu" and "LOCAL_RANK" not in os.environ:
-            import socket
-            import torch.multiprocessing as mp
-
-            # Pick a free port for the NCCL rendezvous (must be the same
-            # across all spawned ranks so they discover each other).
-            master_addr = os.environ.get("MASTER_ADDR", "127.0.0.1")
-            master_port = int(os.environ.get("MASTER_PORT", "0"))
-            if master_port == 0:
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                    s.bind(("", 0))
-                    master_port = s.getsockname()[1]
-
-            logging.info("Launching DDP training on %d GPUs via mp.spawn", gpu_count)
-            logging.info("  MASTER_ADDR=%s  MASTER_PORT=%d", master_addr, master_port)
-
-            mp.spawn(
-                _ddp_training_entry,
-                args=(gpu_count, master_addr, master_port, config.to_dict()),
-                nprocs=gpu_count,
-                join=True,
-            )
-        else:
-            train_main(config)
-        return
 
     ckpt_dir = output_dir / "checkpoints"
     ckpt_dir.mkdir(parents=True, exist_ok=True)
